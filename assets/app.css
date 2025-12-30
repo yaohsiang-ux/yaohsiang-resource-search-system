@@ -1,0 +1,154 @@
+document.addEventListener('DOMContentLoaded', ()=> {
+    // 初始化：預設載入 A 單位
+    loadAUnitData();
+    initNavigation();
+    initFilters();
+  });
+
+// 全域變數：目前顯示的資料類型
+let currentRoute='aunit';
+
+// 1. 處理導覽列點擊
+function initNavigation() {
+  const navItems=document.querySelectorAll('.nav-item');
+
+  navItems.forEach(btn=> {
+      btn.addEventListener('click', (e)=> {
+          // 移除所有 active class
+          navItems.forEach(i=> i.classList.remove('active'));
+          // 加上當前 active
+          const target=e.currentTarget;
+          target.classList.add('active');
+
+          // 讀取路由
+          const route=target.dataset.route;
+          currentRoute=route;
+
+          // 根據路由決定做什麼
+          if (route==='aunit') {
+            loadAUnitData();
+            document.querySelector('.filter-panel').style.display='block'; // 顯示篩選器
+          }
+
+          else {
+            // 其他頁面暫時顯示施工中或空資料
+            loadPlaceholder(route);
+            // 如果是輪椅產生器，可能不需要篩選器，這裡先保留
+          }
+        });
+    });
+}
+
+// 2. 載入 A 單位資料 (核心功能)
+function loadAUnitData() {
+  // 設定標題
+  document.getElementById('panelTitle').textContent='A 單位 (社區整合型服務中心) 列表';
+
+  // 預設顯示全部
+  renderGrid(aUnitData);
+}
+
+// 3. 渲染網格 (產生卡片)
+function renderGrid(data) {
+  const gridEl=document.getElementById('grid');
+  gridEl.innerHTML=''; // 清空
+
+  if (data.length===0) {
+    gridEl.innerHTML='<div style="grid-column: 1/-1; text-align:center; color:#888; padding: 20px;">查無資料</div>';
+    return;
+  }
+
+  data.forEach(item=> {
+      const card=document.createElement('div');
+      card.className='card';
+
+      // 判斷行政區顏色 (可選) - 這裡統一使用
+      const badgeColor='#FFF3E0';
+
+      card.innerHTML=` <div class="card-badges" > <span class="badge" style="background:${badgeColor}" >$ {
+        item.district
+      }
+
+      </span> </div> <h3 class="card-title" >$ {
+        item.title
+      }
+
+      </h3> <div class="card-info" >📍 $ {
+        item.address
+      }
+
+      </div> <div class="card-info" >📞 $ {
+        item.tel
+      }
+
+      </div> <div class="card-subtitle" style="margin-top:10px; font-size:0.85rem;" > <span style="font-weight:bold;" >服務次分區：</span>$ {
+        item.area || '全區'
+      }
+
+      </div> `;
+      gridEl.appendChild(card);
+    });
+}
+
+// 4. 初始化篩選器 (搜尋框 + 行政區按鈕)
+function initFilters() {
+  // 行政區按鈕
+  const chips=document.querySelectorAll('.chip');
+
+  chips.forEach(chip=> {
+      chip.addEventListener('click', ()=> {
+          // 樣式切換
+          chips.forEach(c=> c.classList.remove('active'));
+          chip.classList.add('active');
+
+          // 執行篩選
+          const district=chip.textContent;
+          filterData(district, document.querySelector('.input-search').value);
+        });
+    });
+
+  // 關鍵字搜尋
+  const searchInput=document.querySelector('.input-search');
+
+  searchInput.addEventListener('input', (e)=> {
+      // 取得目前選中的行政區
+      const activeChip=document.querySelector('.chip.active').textContent;
+      filterData(activeChip, e.target.value);
+    });
+}
+
+// 5. 執行篩選邏輯
+function filterData(district, keyword) {
+  // 如果不在 A 單位頁面，先不處理 (或是擴充到其他資料)
+  if (currentRoute !=='aunit') return;
+
+  let filtered=aUnitData;
+
+  // 1. 篩選行政區
+  if (district !=='全部') {
+    filtered=filtered.filter(item=> item.district===district);
+  }
+
+  // 2. 篩選關鍵字 (名稱 或 地址)
+  if (keyword) {
+    const key=keyword.toLowerCase();
+    filtered=filtered.filter(item=> item.title.toLowerCase().includes(key) || item.address.includes(key));
+  }
+
+  // 重新渲染
+  renderGrid(filtered);
+}
+
+// 輔助：載入暫位畫面
+function loadPlaceholder(route) {
+  const titles= {
+    'wheelchair': '簡易輪椅尺寸產生器',
+      'subsidy': '輔具無障礙補助',
+      'vendors': '臺北市輔具無障礙特約廠商',
+      'resources': '社區機構資源總覽'
+  }
+
+  ;
+  document.getElementById('panelTitle').textContent=titles[route];
+  document.getElementById('grid').innerHTML='<div style="padding:20px; color:#666;">功能建置中...</div>';
+}
