@@ -49,6 +49,9 @@ SOURCES = {
     "ei_products": ("智慧科技輔具通過產品清單（衛福部公告附件）",
                     "https://www.mohw.gov.tw/cp-16-87062-1.html",
                     "ei_pdf"),
+    "daycare_roster": ("社會局 日照及小規機一覽表頁附件",
+                       "https://dosw.gov.taipei/cp.aspx?n=3E3C1D86A51BF473&s=B72AFFE457F98DE1",
+                       "attachments"),
 }
 
 HEALTH_LIST_PAGE = "https://health.gov.taipei/News.aspx?n=3B14F55B09E96685&sms=8F0619542D0F4F55"
@@ -168,6 +171,76 @@ def sync_ei_products():
         print(f"ei_products.json 無變動（{len(products)} 筆）")
 
 
+WORKSHOP_API = ("https://data.taipei/api/v1/dataset/"
+                "4a271c2b-a47a-4765-8440-f600fc0cb1c4?scope=resourceAquire&limit=200")
+XZS_PAGE = "https://dosw.gov.taipei/cp.aspx?n=8AF55BABC5D4423D"
+
+
+def _district(addr):
+    m = re.search(r"[臺台]北市(\w{1,3}區)", addr or "")
+    return m.group(1) if m else ""
+
+
+def _save_facility_json(fname, label, items, min_count):
+    if len(items) < min_count:
+        print(f"::error::{label} 僅 {len(items)} 筆（預期 {min_count}+），不更新", file=sys.stderr)
+        return
+    out = {"updated": datetime.now(TPE).strftime("%Y-%m-%d"), "count": len(items), "items": items}
+    path = DATA / fname
+    new = json.dumps(out, ensure_ascii=False, indent=1)
+
+    def core(s):
+        try:
+            return json.dumps(json.loads(s).get("items"), ensure_ascii=False)
+        except Exception:
+            return ""
+    old = path.read_text(encoding="utf-8") if path.exists() else ""
+    if core(new) != core(old):
+        path.write_text(new, encoding="utf-8")
+        print(f"{fname} 已更新：{len(items)} 筆")
+    else:
+        print(f"{fname} 無變動（{len(items)} 筆）")
+
+
+def sync_sheltered_workshops():
+    """臺北市庇護工場名冊（data.taipei 開放資料 API，勞動局年度更新）→ data/workshops.json"""
+    d = json.loads(fetch(WORKSHOP_API))
+    items = []
+    for r in d["result"]["results"]:
+        phone = (r.get("電話") or "").strip()
+        items.append({
+            "name": (r.get("工場名稱") or "").strip(),
+            "category": "身障", "subCategory": "庇護工場",
+            "district": _district(r.get("地址")),
+            "address": (r.get("地址") or "").strip(),
+            "phone": ("(02)" + phone) if phone and not phone.startswith("0") else phone,
+            "capacity": "庇護工場",
+            "note": (r.get("營業項目") or "").strip(),
+        })
+    _save_facility_json("workshops.json", "庇護工場", items, 30)
+
+
+def sync_xiaozuosuo():
+    """臺北市小作所（社區日間作業設施，社會局頁面表格）→ data/xiaozuosuo.json"""
+    page = fetch(XZS_PAGE)
+    items = []
+    for row in re.findall(r"<tr[^>]*>([\s\S]*?)</tr>", page):
+        import html as h
+        cells = [h.unescape(re.sub(r"<[^>]+>", "", c)).replace("\xa0", " ").strip()
+                 for c in re.findall(r"<t[dh][^>]*>([\s\S]*?)</t[dh]>", row)]
+        # 資料列：[承辦單位, 設施名稱, 地址, 電話, 相關介紹]
+        if len(cells) >= 4 and "北市" in cells[2] and "服務內容" not in cells[0]:
+            phone = cells[3].strip()
+            items.append({
+                "name": cells[1], "category": "身障", "subCategory": "小作所",
+                "district": _district(cells[2]), "address": cells[2],
+                "phone": ("(02)" + phone) if phone and not phone.startswith("0") else phone,
+                "capacity": "小作所",
+                "note": re.sub(r"^財團法人|^社團法人", "", cells[0]),
+            })
+    _save_facility_json("xiaozuosuo.json", "小作所", items, 15)
+
+
 def extract_attachments(html):
     """萃取頁面上 Download.ashx 附件的檔名清單（穩定訊號，避免整頁 hash 誤報）"""
     import base64
@@ -257,6 +330,8 @@ if __name__ == "__main__":
     if cmd == "sync":
         sync_c_stations()
         sync_ei_products()
+        sync_sheltered_workshops()
+        sync_xiaozuosuo()
     elif cmd == "watch":
         watch()
     else:

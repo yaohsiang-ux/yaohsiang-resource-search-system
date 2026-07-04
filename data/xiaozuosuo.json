@@ -1,0 +1,286 @@
+{
+ "updated": "2026-07-05",
+ "count": 28,
+ "items": [
+  {
+   "name": "育成蘭興站",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "士林區",
+   "address": "臺北市士林區磺溪街88巷5號1樓",
+   "phone": "(02)2838-4866",
+   "capacity": "小作所",
+   "note": "育成社會福利基金會"
+  },
+  {
+   "name": "夢想工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "中正區",
+   "address": "臺北市中正區南昌路2段192號5樓之3",
+   "phone": "(02)2365-5312",
+   "capacity": "小作所",
+   "note": "育成社會福利基金會"
+  },
+  {
+   "name": "天生我才大安站(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "大安區",
+   "address": "臺北市大安區敦化南路2段200巷16號5樓",
+   "phone": "(02)2738-2851",
+   "capacity": "小作所",
+   "note": "中華民國唐氏症基金會"
+  },
+  {
+   "name": "北投工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "北投區",
+   "address": "臺北市北投區石牌路2段99巷9號4樓",
+   "phone": "(02)2822-6261",
+   "capacity": "小作所",
+   "note": "中華民國自閉症基金會"
+  },
+  {
+   "name": "星兒工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "中正區",
+   "address": "臺北市中正區寧波西街62號3樓",
+   "phone": "(02)2394-4258",
+   "capacity": "小作所",
+   "note": "中華民國自閉症總會"
+  },
+  {
+   "name": "心朋友工作坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "信義區",
+   "address": "臺北市信義區和平東路3段391巷20弄16號",
+   "phone": "(02)8732-6543",
+   "capacity": "小作所",
+   "note": "心生活協會"
+  },
+  {
+   "name": "肯納和平坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "中正區",
+   "address": "臺北市中正區和平西路2段6號4樓",
+   "phone": "(02)7728-8659",
+   "capacity": "小作所",
+   "note": "台灣肯納自閉症基金會"
+  },
+  {
+   "name": "星扶工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "松山區",
+   "address": "臺北市松山區八德路4段306號4樓",
+   "phone": "(02)2528-5266",
+   "capacity": "小作所",
+   "note": "台北市自閉兒社會福利基金會"
+  },
+  {
+   "name": "古亭工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "中正區",
+   "address": "臺北市中正區羅斯福路二段150號2樓",
+   "phone": "(02)2362-0218",
+   "capacity": "小作所",
+   "note": "喜憨兒社會福利基金會"
+  },
+  {
+   "name": "心願工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "大同區",
+   "address": "臺北市大同區昌吉街52號8樓",
+   "phone": "(02)2592-9960",
+   "capacity": "小作所",
+   "note": "育成社會福利基金會"
+  },
+  {
+   "name": "廣慈工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "信義區",
+   "address": "臺北市信義區福德街84巷30號5樓之1",
+   "phone": "(02)2726-0059",
+   "capacity": "小作所",
+   "note": "喜憨兒社會福利基金會"
+  },
+  {
+   "name": "大安工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "大安區",
+   "address": "臺北市大安區瑞安街73號3樓",
+   "phone": "(02)2707-3050",
+   "capacity": "小作所",
+   "note": "中華民國唐氏症基金會"
+  },
+  {
+   "name": "士林工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "士林區",
+   "address": "臺北市士林區忠誠路2段53巷7號9樓",
+   "phone": "(02)2832-2807",
+   "capacity": "小作所",
+   "note": "中華民國自閉症基金會"
+  },
+  {
+   "name": "聖文生樂活工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "北投區",
+   "address": "臺北市北投區石牌路2段90巷20號2樓",
+   "phone": "(02)2823-7730轉23/21",
+   "capacity": "小作所",
+   "note": " 天主教白永恩神父社會福利基金會"
+  },
+  {
+   "name": "南港工坊—(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "南港區",
+   "address": "臺北市南港區八德路四段768之1號1樓",
+   "phone": "(02)2788-5260",
+   "capacity": "小作所",
+   "note": "台北市康復之友協會"
+  },
+  {
+   "name": "文山工坊—(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "文山區",
+   "address": "臺北市文山區興隆路4段105巷45號1樓",
+   "phone": "(02)2234-6185",
+   "capacity": "小作所",
+   "note": "喜憨兒社會福利基金會"
+  },
+  {
+   "name": "內湖工坊—(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "內湖區",
+   "address": "臺北市內湖區江南街71巷60號、62號1樓",
+   "phone": "0925-298772",
+   "capacity": "小作所",
+   "note": "中華民國自閉症總會"
+  },
+  {
+   "name": "健康工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "松山區",
+   "address": "臺北市松山區健康路399號6樓",
+   "phone": "(02)2758-8889",
+   "capacity": "小作所",
+   "note": "台灣肯納自閉症基金會"
+  },
+  {
+   "name": "中山工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "中山區",
+   "address": "臺北市中山區建國北路二段262號3樓",
+   "phone": "(02)2501-6506",
+   "capacity": "小作所",
+   "note": "台北市自閉症家長協會"
+  },
+  {
+   "name": "奇岩工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "北投區",
+   "address": "臺北市北投區三合街1段119號7樓",
+   "phone": "(02)28940370",
+   "capacity": "小作所",
+   "note": "廣青文教基金會"
+  },
+  {
+   "name": "萬華視障生活重建中心暨社區工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "萬華區",
+   "address": "臺北市萬華區梧州街36號4樓",
+   "phone": "(02)2308-5598",
+   "capacity": "小作所",
+   "note": "台北市視障者家長協會"
+  },
+  {
+   "name": "明倫工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "大同區",
+   "address": "臺北市大同區承德路3段285之5號1樓",
+   "phone": "(02)2598-3321",
+   "capacity": "小作所",
+   "note": "中華民國唐氏症基金會"
+  },
+  {
+   "name": "松山工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "松山區",
+   "address": "臺北市松山區南京東路5段356號6F-2",
+   "phone": "(02)2748-5810",
+   "capacity": "小作所",
+   "note": "喜憨兒社會福利基金會"
+  },
+  {
+   "name": "瑞光工坊(社會局委辦)",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "內湖區",
+   "address": "臺北市內湖區瑞光路162號2樓之2",
+   "phone": "(02)8978-7827",
+   "capacity": "小作所",
+   "note": "育成社會福利基金會"
+  },
+  {
+   "name": "建成工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "大同區",
+   "address": "臺北市大同區承德路2段33號6樓",
+   "phone": "(02)2345-5812",
+   "capacity": "小作所",
+   "note": "喜憨兒社會福利基金會"
+  },
+  {
+   "name": "莒光工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "萬華區",
+   "address": "臺北市萬華區萬大路22號3樓",
+   "phone": "(02)2302-9442",
+   "capacity": "小作所",
+   "note": "中華民國唐氏症基金會"
+  },
+  {
+   "name": "興岩工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "文山區",
+   "address": "臺北市文山區興隆路二段88號5樓之5",
+   "phone": "(02)8979-6068",
+   "capacity": "小作所",
+   "note": "育成社會福利基金會"
+  },
+  {
+   "name": "安湖工坊",
+   "category": "身障",
+   "subCategory": "小作所",
+   "district": "內湖區",
+   "address": "臺北市內湖區東湖路1號5樓",
+   "phone": "(02)2631-3136",
+   "capacity": "小作所",
+   "note": "台北市自閉兒社會福利基金會"
+  }
+ ]
+}
