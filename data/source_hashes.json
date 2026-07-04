@@ -1,0 +1,23 @@
+{
+ "aunit_pdf": {
+  "hash": "21d90f03c62bc4f0e9ddd798032942a332a02430722ed1b9b62309d1af152c86",
+  "checked": "2026-07-04"
+ },
+ "dosw_subsidy": {
+  "hash": "fe97c87b1d3bf0337c813eb67b28151810202815516a21cc4034eab5d6a0c424",
+  "checked": "2026-07-04"
+ },
+ "dosw_vendors": {
+  "hash": "e2657de9b91531f1c289f4ec7e7e61df5b7fb6264d9b99488972f1d8b6a4ef4a",
+  "checked": "2026-07-04"
+ },
+ "dementia_roster": {
+  "hash": "767514609fb11e7204457ee4b614d65a90e88b00de4db8a384ad50ac2cb6185b",
+  "checked": "2026-07-04"
+ },
+ "ltc_law": {
+  "hash": "53ac45fbda9e8a0b48900a877c624681296330d53992379e1a771aa6f04883a1",
+  "checked": "2026-07-04",
+  "detail": "修正日期 民國114年06月19日"
+ }
+}

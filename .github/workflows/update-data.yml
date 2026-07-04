@@ -1,0 +1,60 @@
+name: 資料自動更新
+
+on:
+  schedule:
+    - cron: '0 1 * * 1'   # 每週一 09:00 台北時間
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 同步 C級巷弄站（Google Sheet → data/c_stations.json）
+        run: python3 scripts/update_data.py sync
+
+      - name: 官方來源異動偵測
+        id: watch
+        run: |
+          python3 scripts/update_data.py watch | tee watch_output.txt
+          if grep -q CHANGES_DETECTED watch_output.txt; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            grep '^- ' watch_output.txt > changes.md
+          fi
+
+      - name: 提交資料變動
+        run: |
+          git config user.name "data-bot"
+          git config user.email "actions@github.com"
+          git add data/
+          if ! git diff --cached --quiet; then
+            git commit -m "自動更新：C級據點/來源監看 $(date +%Y-%m-%d)"
+            git push
+          else
+            echo "無資料變動"
+          fi
+
+      - name: 來源異動 → 開 Issue 提醒
+        if: steps.watch.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TITLE="⚠️ 官方資料來源有異動 $(date +%Y-%m-%d)"
+          if gh issue list --state open --search "官方資料來源有異動" --json number --jq length | grep -qv '^0$'; then
+            EXISTING=$(gh issue list --state open --search "官方資料來源有異動" --json number --jq '.[0].number')
+            gh issue comment "$EXISTING" --body-file changes.md
+          else
+            {
+              echo "自動監看偵測到以下官方來源內容變動，網站內嵌資料可能需要更新："
+              echo ""
+              cat changes.md
+              echo ""
+              echo "處理方式：把此 Issue 內容貼給 Claude Code，請它比對官方新版並更新 index.html 對應資料區塊。"
+            } > issue_body.md
+            gh issue create --title "$TITLE" --body-file issue_body.md
+          fi

@@ -2986,6 +2986,24 @@
       const countSpan = document.getElementById('resCount');
       if (countSpan) countSpan.textContent = "資料更新中...";
 
+      // 優先讀同源 data/c_stations.json（GitHub Actions 每週自動同步，不經第三方代理）
+      fetch('data/c_stations.json')
+        .then(r => { if (!r.ok) throw new Error('local json miss'); return r.json(); })
+        .then(j => {
+          const sheetData = j.stations.map(s => ({
+            name: s.name, category: "長照", subCategory: "C級巷弄站",
+            district: s.district, address: s.address, phone: s.phone,
+            capacity: "社區據點", note: s.note
+          }));
+          generalResourcesData = generalResourcesData.concat(sheetData);
+          if (document.getElementById('resGrid')) updateResourceList();
+          console.log(`成功載入 ${sheetData.length} 筆 C級據點資料（同源快取 ${j.updated}）`);
+        })
+        .catch(() => loadGoogleSheetFallback());
+    }
+
+    function loadGoogleSheetFallback() {
+      const countSpan = document.getElementById('resCount');
       fetch(googleSheetCSVUrl)
         .then(response => response.text())
         .then(csvText => {
