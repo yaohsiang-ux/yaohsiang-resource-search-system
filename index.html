@@ -1523,7 +1523,14 @@
       { code: "TP15", name: "沐浴椅附加功能-具利於移位之扶手 (北市自辦)", category: "home", buyPrice: 1000, rentPrice: 0, years: 3 },
       { code: "TP16", name: "沐浴椅附加功能-具仰躺功能 (北市自辦)", category: "home", buyPrice: 1500, rentPrice: 0, years: 3 },
       { code: "TP17", name: "沐浴椅附加功能-具空中傾倒功能 (北市自辦)", category: "home", buyPrice: 3500, rentPrice: 0, years: 3 },
-      { code: "TP18", name: "馬桶扶手 (北市自辦)", category: "home", buyPrice: 900, rentPrice: 0, years: 10 }
+      { code: "TP18", name: "馬桶扶手 (北市自辦)", category: "home", buyPrice: 900, rentPrice: 0, years: 10 },
+
+      // --- 智慧科技輔具（長照3.0 第二組，115/7/1 上路：全租賃、租金由特約單位定價報備查） ---
+      { code: "EI01", name: "智慧科技輔具-移位類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true },
+      { code: "EI02", name: "智慧科技輔具-移動類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true },
+      { code: "EI03", name: "智慧科技輔具-沐浴排泄類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true },
+      { code: "EI04", name: "智慧科技輔具-居家照顧床類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true },
+      { code: "EI05", name: "智慧科技輔具-安全看視類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true }
     ];
 
     // ==============================================
@@ -3355,6 +3362,7 @@
                 <button class="cat-pill" onclick="setCategory('home', this)">居家生活</button>
                 <button class="cat-pill" onclick="setCategory('env', this)">居家環境</button>
                 <button class="cat-pill" onclick="setCategory('comm', this)">溝通資訊</button>
+                <button class="cat-pill" onclick="setCategory('smart', this)">智慧科技</button>
             </div>
             <div class="district-header">
                 <h3 class="district-title">輔具列表</h3>
@@ -3392,21 +3400,28 @@
       let items = ltcSubsidyData.filter(i => {
         const matchCat = currentCategory === 'all' || i.category === currentCategory;
         const matchSearch = i.name.includes(subsidySearchTerm) || i.code.includes(subsidySearchTerm.toUpperCase());
-        const matchMode = currentMode === 'buy' ? (i.buyPrice > 0) : (i.rentPrice > 0);
+        const matchMode = i.providerPrice ? currentMode === 'rent' : (currentMode === 'buy' ? (i.buyPrice > 0) : (i.rentPrice > 0));
         return matchCat && matchSearch && matchMode;
       });
       document.getElementById('subsidyCount').textContent = `共 ${items.length} 筆`;
       if (items.length === 0) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#999;">無符合項目</div>'; return; }
       let rate = 0.7; if (currentIdentity === 'midlow') rate = 0.9; if (currentIdentity === 'low') rate = 1.0;
       items.forEach(item => {
+        const div = document.createElement('div'); div.className = 'subsidy-card';
+        if (item.providerPrice) {
+          // 智慧科技輔具（第二組）：無中央公定價，租金由特約單位定價
+          div.innerHTML = `<div class="sub-code">${item.code}</div><div class="sub-name">${item.name} <span class="full-sub-tag">第二組｜3年6萬</span></div><div class="price-block"><div class="price-row"><span class="p-label">租金</span><span class="p-val" style="font-size:0.9rem;">由特約單位定價</span></div><div class="price-row"><span class="p-label">給付方式</span><span class="p-val highlight" style="font-size:0.9rem;">全租賃・按月給付</span></div><div class="year-tag">須甲類輔具評估人員評估｜與第一組(3年4萬)二擇一｜部分負擔同左上身分別</div></div>`;
+          grid.appendChild(div);
+          return;
+        }
         const effectiveRate = item.fullSubsidy ? 1.0 : rate;
         const price = currentMode === 'buy' ? item.buyPrice : item.rentPrice;
         const labelPrice = currentMode === 'buy' ? '購置給付上限' : '租賃給付上限 (每月)';
         const labelSub = currentMode === 'buy' ? '購置最高補助' : '租賃最高補助 (每月)';
         const maxSub = Math.round(price * effectiveRate);
         const fullTag = item.fullSubsidy ? '<span class="full-sub-tag">※ 免部分負擔</span>' : '';
-        const div = document.createElement('div'); div.className = 'subsidy-card';
-        div.innerHTML = `<div class="sub-code">${item.code}</div><div class="sub-name">${item.name} ${fullTag}</div><div class="price-block"><div class="price-row"><span class="p-label">${labelPrice}</span><span class="p-val">$${price}</span></div><div class="price-row"><span class="p-label">${labelSub}</span><span class="p-val highlight">$${maxSub}</span></div><div class="year-tag">購置後最低使用年限：${item.years} 年</div></div>`;
+        const yearText = (item.years === '月') ? '限租賃・按月給付' : (item.years === '趟') ? '限租賃・按趟給付' : `購置後最低使用年限：${item.years} 年`;
+        div.innerHTML = `<div class="sub-code">${item.code}</div><div class="sub-name">${item.name} ${fullTag}</div><div class="price-block"><div class="price-row"><span class="p-label">${labelPrice}</span><span class="p-val">$${price}</span></div><div class="price-row"><span class="p-label">${labelSub}</span><span class="p-val highlight">$${maxSub}</span></div><div class="year-tag">${yearText}</div></div>`;
         grid.appendChild(div);
       });
     }
