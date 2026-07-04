@@ -1,0 +1,153 @@
+{
+ "updated": "2026-07-04（LTCAT 平台自動同步）",
+ "source": "https://ltcat.mohw.gov.tw/Public/Products",
+ "count": 16,
+ "items": [
+  {
+   "name": "FREE Walk自立行外骨骼輔助機器人",
+   "model": "FW-PR-01 / FW-PR-02",
+   "vendor": "福寶科技",
+   "codes": [
+    "EI02"
+   ],
+   "price": 1500000
+  },
+  {
+   "name": "智世代變形電動車 銀翼BSG",
+   "model": "BestShape Go Powered Wheelchair",
+   "vendor": "緯創醫學科技",
+   "codes": [
+    "EI02"
+   ],
+   "price": 180000
+  },
+  {
+   "name": "AIoT全自動排泄處理機",
+   "model": "SL-EEI02M",
+   "vendor": "碩享科技",
+   "codes": [
+    "EI03"
+   ],
+   "price": 248000
+  },
+  {
+   "name": "AIoT智慧型翻身輔助器",
+   "model": "SL-BBI00M-EX",
+   "vendor": "碩享科技",
+   "codes": [
+    "EI04"
+   ],
+   "price": 73000
+  },
+  {
+   "name": "WhizPad安心臥智慧床墊",
+   "model": "SP-600",
+   "vendor": "世大福智科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ],
+   "price": 55000
+  },
+  {
+   "name": "iCue智慧照護幫手",
+   "model": "SM_N01",
+   "vendor": "維思感創",
+   "codes": [
+    "EI04",
+    "EI05"
+   ]
+  },
+  {
+   "name": "iCue智慧照護幫手+生理量測組",
+   "model": "SM_N01/iCue_Hah",
+   "vendor": "維思感創",
+   "codes": [
+    "EI04",
+    "EI05"
+   ]
+  },
+  {
+   "name": "智慧光纖照護薄墊",
+   "model": "USC-003B-10",
+   "vendor": "滙嘉健康生活科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ],
+   "price": 29800
+  },
+  {
+   "name": "智慧光纖薄墊監視器",
+   "model": "HIME-001-A",
+   "vendor": "滙嘉健康生活科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ],
+   "price": 108000
+  },
+  {
+   "name": "智慧感知氣墊(基礎版)",
+   "model": "Lite-V101",
+   "vendor": "輔人科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ],
+   "price": 25000
+  },
+  {
+   "name": "智慧感知氣墊(標準版)",
+   "model": "Std-V101",
+   "vendor": "輔人科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ],
+   "price": 25000
+  },
+  {
+   "name": "AI智慧定位鞋墊",
+   "model": "-",
+   "vendor": "有創科技",
+   "codes": [
+    "EI05"
+   ],
+   "price": 3960
+  },
+  {
+   "name": "AI零接觸智能照護系統",
+   "model": "BestShape VS",
+   "vendor": "緯創醫學科技",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "AI零接觸樂活偵測系統",
+   "model": "BestShape Care",
+   "vendor": "緯創醫學科技",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "伊鍵通-Ai+高齡智慧守護系統服務",
+   "model": "OT Guard",
+   "vendor": "瞬通科技",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "智慧光纖坐墊",
+   "model": "USC-003B-10",
+   "vendor": "滙嘉健康生活科技",
+   "codes": [
+    "EI05"
+   ],
+   "price": 26800
+  }
+ ]
+}

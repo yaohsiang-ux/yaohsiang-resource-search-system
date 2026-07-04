@@ -46,6 +46,9 @@ SOURCES = {
     "ltc_law": ("長期照顧服務申請及給付辦法（修正日期）",
                 "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=L0070059",
                 "law_date"),
+    "ei_products": ("智慧科技輔具通過產品清單（衛福部公告附件）",
+                    "https://www.mohw.gov.tw/cp-16-87062-1.html",
+                    "ei_pdf"),
 }
 
 HEALTH_LIST_PAGE = "https://health.gov.taipei/News.aspx?n=3B14F55B09E96685&sms=8F0619542D0F4F55"
@@ -112,6 +115,59 @@ def sync_c_stations():
         print(f"c_stations.json 無變動（{len(stations)} 筆）")
 
 
+LTCAT_API = ("https://ltcat.mohw.gov.tw/Public/Products?handler=List"
+             "&pageIndex={page}&pageSize=20&keyword=&sortField=updatedAt&sortDir=desc")
+
+
+def sync_ei_products():
+    """LTCAT 官方平台 JSON API → data/ei_products.json（智慧科技輔具通過產品，滾動更新）
+    注意：pageIndex 是 0-based；pageSize 上限 20。"""
+    items, page = [], 0
+    while True:
+        d = json.loads(fetch(LTCAT_API.format(page=page)))
+        chunk = d["data"]["items"]
+        items.extend(chunk)
+        if len(items) >= d["data"]["totalCount"] or not chunk:
+            break
+        page += 1
+    if len(items) < 5:  # 安全網：API 異常時不覆寫
+        print(f"::error::LTCAT 僅回 {len(items)} 筆（預期 15+），不更新", file=sys.stderr)
+        return
+    products = []
+    for it in items:
+        codes = re.findall(r"EI\d{2}", it.get("subsidyCodeText") or "")
+        vendor = re.sub(r"(股份有限公司|有限公司)$", "", (it.get("companyName") or "").strip())
+        price = it.get("suggestedPriceTwd")
+        products.append({
+            "name": (it.get("productName") or "").strip(),
+            "model": (it.get("productModel") or "").replace('"', "").strip(),
+            "vendor": vendor,
+            "codes": codes or ["EI05"],
+            **({"price": int(price)} if it.get("isPricePublic") and price else {}),
+        })
+    products.sort(key=lambda p: (p["codes"][0], p["name"]))
+    out = {
+        "updated": datetime.now(TPE).strftime("%Y-%m-%d") + "（LTCAT 平台自動同步）",
+        "source": "https://ltcat.mohw.gov.tw/Public/Products",
+        "count": len(products),
+        "items": products,
+    }
+    path = DATA / "ei_products.json"
+    new = json.dumps(out, ensure_ascii=False, indent=1)
+
+    def core(s):
+        try:
+            return json.dumps(json.loads(s).get("items"), ensure_ascii=False)
+        except Exception:
+            return ""
+    old = path.read_text(encoding="utf-8") if path.exists() else ""
+    if core(new) != core(old):
+        path.write_text(new, encoding="utf-8")
+        print(f"ei_products.json 已更新：{len(products)} 筆")
+    else:
+        print(f"ei_products.json 無變動（{len(products)} 筆）")
+
+
 def extract_attachments(html):
     """萃取頁面上 Download.ashx 附件的檔名清單（穩定訊號，避免整頁 hash 誤報）"""
     import base64
@@ -151,6 +207,15 @@ def aunit_signal():
     return hashlib.sha256(pdf).hexdigest()
 
 
+def ei_pdf_signal(page_url):
+    """衛福部新聞稿頁 → 附件 PDF（智慧輔具通過產品清單）內容 hash"""
+    page = fetch(page_url)
+    m = re.search(r'href="(https://www\.mohw\.gov\.tw/dl-[^"]+)"', page)
+    if not m:
+        return "LINK_NOT_FOUND"
+    return hashlib.sha256(fetch(m.group(1), binary=True)).hexdigest()
+
+
 def watch():
     DATA.mkdir(exist_ok=True)
     state_path = DATA / "source_hashes.json"
@@ -165,6 +230,8 @@ def watch():
                 signal = extract_attachments(fetch(url))
             elif mode == "law_date":
                 signal = extract_law_date(fetch(url))
+            elif mode == "ei_pdf":
+                signal = ei_pdf_signal(url)
             digest = hashlib.sha256(signal.encode("utf-8")).hexdigest()
             detail = signal if mode == "law_date" else ""
         except Exception as e:  # 來源掛掉不中斷其他來源
@@ -189,6 +256,7 @@ if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "sync":
         sync_c_stations()
+        sync_ei_products()
     elif cmd == "watch":
         watch()
     else:

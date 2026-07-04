@@ -1533,6 +1533,10 @@
       { code: "EI05", name: "智慧科技輔具-安全看視類", category: "smart", buyPrice: 0, rentPrice: 0, years: "月", providerPrice: true }
     ];
 
+    // 智慧科技輔具通過審議產品（首批115/7/1生效；data/ei_products.json 每週自動同步覆蓋）
+    let eiProducts = {"updated": "2026-07-04（LTCAT 平台自動同步）", "source": "https://ltcat.mohw.gov.tw/Public/Products", "count": 16, "items": [{"name": "FREE Walk自立行外骨骼輔助機器人", "model": "FW-PR-01 / FW-PR-02", "vendor": "福寶科技", "codes": ["EI02"], "price": 1500000}, {"name": "智世代變形電動車 銀翼BSG", "model": "BestShape Go Powered Wheelchair", "vendor": "緯創醫學科技", "codes": ["EI02"], "price": 180000}, {"name": "AIoT全自動排泄處理機", "model": "SL-EEI02M", "vendor": "碩享科技", "codes": ["EI03"], "price": 248000}, {"name": "AIoT智慧型翻身輔助器", "model": "SL-BBI00M-EX", "vendor": "碩享科技", "codes": ["EI04"], "price": 73000}, {"name": "WhizPad安心臥智慧床墊", "model": "SP-600", "vendor": "世大福智科技", "codes": ["EI04", "EI05"], "price": 55000}, {"name": "iCue智慧照護幫手", "model": "SM_N01", "vendor": "維思感創", "codes": ["EI04", "EI05"]}, {"name": "iCue智慧照護幫手+生理量測組", "model": "SM_N01/iCue_Hah", "vendor": "維思感創", "codes": ["EI04", "EI05"]}, {"name": "智慧光纖照護薄墊", "model": "USC-003B-10", "vendor": "滙嘉健康生活科技", "codes": ["EI04", "EI05"], "price": 29800}, {"name": "智慧光纖薄墊監視器", "model": "HIME-001-A", "vendor": "滙嘉健康生活科技", "codes": ["EI04", "EI05"], "price": 108000}, {"name": "智慧感知氣墊(基礎版)", "model": "Lite-V101", "vendor": "輔人科技", "codes": ["EI04", "EI05"], "price": 25000}, {"name": "智慧感知氣墊(標準版)", "model": "Std-V101", "vendor": "輔人科技", "codes": ["EI04", "EI05"], "price": 25000}, {"name": "AI智慧定位鞋墊", "model": "-", "vendor": "有創科技", "codes": ["EI05"], "price": 3960}, {"name": "AI零接觸智能照護系統", "model": "BestShape VS", "vendor": "緯創醫學科技", "codes": ["EI05"]}, {"name": "AI零接觸樂活偵測系統", "model": "BestShape Care", "vendor": "緯創醫學科技", "codes": ["EI05"]}, {"name": "伊鍵通-Ai+高齡智慧守護系統服務", "model": "OT Guard", "vendor": "瞬通科技", "codes": ["EI05"]}, {"name": "智慧光纖坐墊", "model": "USC-003B-10", "vendor": "滙嘉健康生活科技", "codes": ["EI05"], "price": 26800}]};
+    fetch('data/ei_products.json').then(r => r.ok ? r.json() : null).then(j => { if (j) eiProducts = j; }).catch(() => {});
+
     // ==============================================
     // ==============================================
     // 3. 身障生活輔具 (完整版 242項 - 分類標籤已修正對應按鈕)
@@ -3409,8 +3413,17 @@
       items.forEach(item => {
         const div = document.createElement('div'); div.className = 'subsidy-card';
         if (item.providerPrice) {
-          // 智慧科技輔具（第二組）：無中央公定價，租金由特約單位定價
-          div.innerHTML = `<div class="sub-code">${item.code}</div><div class="sub-name">${item.name} <span class="full-sub-tag">第二組｜3年6萬</span></div><div class="price-block"><div class="price-row"><span class="p-label">租金</span><span class="p-val" style="font-size:0.9rem;">由特約單位定價</span></div><div class="price-row"><span class="p-label">給付方式</span><span class="p-val highlight" style="font-size:0.9rem;">全租賃・按月給付</span></div><div class="year-tag">須甲類輔具評估人員評估｜與第一組(3年4萬)二擇一｜部分負擔同左上身分別</div></div>`;
+          // 智慧科技輔具（第二組）：無中央公定價，租金由特約單位定價；點卡片展開通過產品
+          const prods = eiProducts.items.filter(p => (p.codes || [p.code]).includes(item.code));
+          const prodRows = prods.length
+            ? prods.map(p => `<div style="padding:5px 0;border-bottom:1px dashed #eee;font-size:0.85rem;">${p.name}<span style="color:#999;font-size:0.78rem;">${p.model ? '｜' + p.model : ''}｜${p.vendor}${p.price ? '｜建議售價 $' + p.price.toLocaleString() : ''}</span></div>`).join('')
+            : '<div style="padding:5px 0;color:#999;font-size:0.85rem;">首批公告尚無此類通過產品</div>';
+          div.style.cursor = 'pointer';
+          div.innerHTML = `<div class="sub-code">${item.code}</div><div class="sub-name">${item.name} <span class="full-sub-tag">第二組｜3年6萬</span></div><div class="price-block"><div class="price-row"><span class="p-label">租金</span><span class="p-val" style="font-size:0.9rem;">由特約單位定價</span></div><div class="price-row"><span class="p-label">給付方式</span><span class="p-val highlight" style="font-size:0.9rem;">全租賃・按月給付</span></div><div class="year-tag">須甲類輔具評估人員評估｜與第一組(3年4萬)二擇一</div><div class="year-tag" style="color:#D65A31;">▼ 點卡片看通過給付的產品（${prods.length}件）</div><div class="ei-detail" style="display:none;margin-top:8px;">${prodRows}${eiProducts.updated ? `<div style=\"font-size:0.75rem;color:#bbb;margin-top:6px;\">名單版本：${eiProducts.updated}</div>` : ''}</div></div>`;
+          div.addEventListener('click', () => {
+            const d = div.querySelector('.ei-detail');
+            d.style.display = d.style.display === 'none' ? 'block' : 'none';
+          });
           grid.appendChild(div);
           return;
         }
