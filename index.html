@@ -1933,7 +1933,7 @@
 
     // 這裡填入您提供的大型 JSON 資料
     // 這裡填入整合後的完整資料 (含臺北市特約門市 + 爬梯機廠商)
-    const resourcesData = [
+    let resourcesData = [
       // ==============================================
       // 1. 爬梯機與交通接送專門廠商 (34筆, 優先顯示)
       // ==============================================
@@ -2402,204 +2402,148 @@
       { name: "萬芳醫院", category: "失智", subCategory: "失智共照中心", district: "文山區", address: "臺北市文山區興隆路三段111號", phone: "02-2930-7930", note: "負責文山區" },
 
       // ==========================================
-      // 【失智資源】權責型失智據點 (共2家 - 114.03.27最新)
+      // 【失智資源】失智社區服務據點＋權責型 - 115.06.25官方通訊錄（48+2處）
+      { "name": "臺北榮民總醫院失智治療及研究中心", "category": "失智", "subCategory": "失智據點", "district": "北投區", "address": "臺北市北投區奇岩里16鄰三合街一段119號一樓", "phone": "0903-256-719", "capacity": "一般型", "note": "B-CS-01／連絡人：張秀君" },
+      { "name": "臺北市北投區林泉社區發展協會", "category": "失智", "subCategory": "失智據點", "district": "北投區", "address": "臺北市北投區新民路46巷37號", "phone": "(02)2895-2630", "capacity": "一般型", "note": "B-CS-35／連絡人：易玉梅" },
+      { "name": "臺北市立關渡醫院委託臺北榮民總醫院經營", "category": "失智", "subCategory": "失智據點", "district": "北投區", "address": "臺北市北投區關渡里知行路260巷28號1樓", "phone": "0938-909-771", "capacity": "一般型", "note": "B-CS-53／連絡人：陳怡婷" },
+      { "name": "臺北市立聯合醫院陽明院區神經內科", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區忠誠路一段171巷10弄12號(蘭雅教會)", "phone": "(02)2835-3456#5178", "capacity": "一般型", "note": "B-CS-09／連絡人：謝炘宜" },
+      { "name": "新康居家職能治療所(士林站)", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區名山里至誠路二段120巷1號", "phone": "0901-314-108", "capacity": "一般型", "note": "B-CS-13／連絡人：洪于婷" },
+      { "name": "財團法人台北市中華基督教浸信會慈光堂", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區翠山里中社路一段43巷5號", "phone": "(02)2841-2290#17", "capacity": "一般型", "note": "B-CS-27／連絡人：辛守仁" },
+      { "name": "財團法人臺北市華夏婦女文教基金會", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區岩山里至誠路一段62巷28號", "phone": "(02)2831-8025", "capacity": "一般型", "note": "B-CS-44／連絡人：潘沐萱" },
+      { "name": "歲悅股份有限公司附設臺北市私立歲悅居家長照機構(士林區)", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區社子街63巷21弄2號", "phone": "(02)6604-5432", "capacity": "一般型", "note": "B-CS-73／連絡人：黃致皓" },
+      { "name": "台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院(士林區)", "category": "失智", "subCategory": "失智據點", "district": "士林區", "address": "臺北市士林區福德里中正路335巷11號5樓(士林長老教會教育館)", "phone": "(02)2543-3535#2770", "capacity": "一般型", "note": "B-CS-50／連絡人：胡乃方" },
+      { "name": "財團法人台灣基督教恩惠福音會(湖光基督教會)", "category": "失智", "subCategory": "失智據點", "district": "內湖區", "address": "臺北市內湖區港墘里內湖路一段608號", "phone": "(02)2797-1000#404", "capacity": "一般型", "note": "B-CS-31／連絡人：鄭書芳" },
+      { "name": "中華民國天使之家全人關懷協會", "category": "失智", "subCategory": "失智據點", "district": "內湖區", "address": "臺北市內湖區湖興里025鄰成功路二段242號1樓", "phone": "(02)2790-9454", "capacity": "一般型", "note": "B-CS-32／連絡人：黃瑞典" },
+      { "name": "財團法人中華民國佛教慈濟慈善事業基金會(大同站)", "category": "失智", "subCategory": "失智據點", "district": "大同區", "address": "臺北市大同區老師里14鄰延平北路四段237號7樓", "phone": "(02)4051-0777#6054", "capacity": "一般型", "note": "B-CS-38／連絡人：王渝媃" },
+      { "name": "社團法人寧祈全人健康生命關懷協會(大同站)", "category": "失智", "subCategory": "失智據點", "district": "大同區", "address": "臺北市大同區延平里甘州街40號7樓（大稻埕教會）", "phone": "(02)2521-3282", "capacity": "一般型", "note": "B-CS-39／連絡人：趙云甄" },
+      { "name": "歲悅股份有限公司附設臺北市私立歲悅居家長照機構(大同區)", "category": "失智", "subCategory": "失智據點", "district": "大同區", "address": "臺北市大同區光能里承德路三段24巷38弄17號1樓", "phone": "(02)6604-5432#22", "capacity": "一般型", "note": "B-CS-74／連絡人：吳俊璋" },
+      { "name": "天主教耕莘醫療財團法人永和耕莘醫院", "category": "失智", "subCategory": "失智據點", "district": "中山區", "address": "臺北市中山區朱崙里龍江路15號4樓", "phone": "(02)2778-5153#101、108", "capacity": "一般型", "note": "B-CS-25／連絡人：邱思敏" },
+      { "name": "臺北市中山老人住宅暨服務中心(財團法人台灣省私立健順養護中心受託經營管理)", "category": "失智", "subCategory": "失智據點", "district": "中山區", "address": "臺北市中山區中原里新生北路二段101巷2號", "phone": "(02)2542-0006#123", "capacity": "一般型", "note": "B-CS-26／連絡人：陳思彤" },
+      { "name": "社團法人中華欣智社區智能長照關懷協會", "category": "失智", "subCategory": "失智據點", "district": "中山區", "address": "臺北市中山區松江里民權東路二段206號3樓", "phone": "(02)8295-8828", "capacity": "一般型", "note": "B-CS-36／連絡人：蕭小姐" },
+      { "name": "台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院(中山區)", "category": "失智", "subCategory": "失智據點", "district": "中山區", "address": "臺北市中山區力行里遼寧街105巷37號1樓(永樂教會)", "phone": "(02)2543-3535#2770", "capacity": "一般型", "note": "B-CS-59／連絡人：胡乃方" },
+      { "name": "社團法人中華欣智社區智能長照關懷協會(中山星智快樂記憶學堂)", "category": "失智", "subCategory": "失智據點", "district": "中山區", "address": "臺北市中山區新生北路三段25巷26號", "phone": "0975-138287", "capacity": "一般型", "note": "B-CS-77／連絡人：蕭婷飴" },
+      { "name": "財團法人佳醫健康基金會(松山站)", "category": "失智", "subCategory": "失智據點", "district": "松山區", "address": "臺北市松山區復勢里寧安街3巷3號1樓", "phone": "(02)2225-8688#1352", "capacity": "一般型", "note": "B-CS-18／連絡人：張綺鈺" },
+      { "name": "社團法人台北市向日葵慈善協會", "category": "失智", "subCategory": "失智據點", "district": "松山區", "address": "臺北市松山區東勢里南京東路四段133巷7弄7號一樓", "phone": "(02)8770-6501#20", "capacity": "一般型", "note": "B-CS-19／連絡人：王建中" },
+      { "name": "台灣基督長老教會馬偕醫療財團法人馬偕紀念醫院(松山區)", "category": "失智", "subCategory": "失智據點", "district": "松山區", "address": "臺北市松山區民有里敦化北路238巷9號1樓(敦化教會教育中心)", "phone": "(02)2543-3535#2770", "capacity": "一般型", "note": "B-CS-57／連絡人：宋珮瑋" },
+      { "name": "國防醫學院三軍總醫院松山分院", "category": "失智", "subCategory": "失智據點", "district": "松山區", "address": "臺北市松山區龍田里14鄰健康路131號", "phone": "(02)2764-2151", "capacity": "一般型", "note": "B-CS-76／連絡人：林冠宇" },
+      { "name": "財團法人中華民國佛教慈濟慈善事業基金會(萬華站)", "category": "失智", "subCategory": "失智據點", "district": "萬華區", "address": "臺北市萬華區莒光路222號5樓", "phone": "(02)4051-0777#6183", "capacity": "一般型", "note": "B-CS-41／連絡人：許秀庭" },
+      { "name": "國立臺灣大學醫學院附設醫院北護分院", "category": "失智", "subCategory": "失智據點", "district": "萬華區", "address": "臺北市萬華區菜園里成都路98號(西門國民小學自強樓4樓)", "phone": "(02)2371-7101#216258", "capacity": "一般型", "note": "B-CS-49／連絡人：黃柏凱" },
+      { "name": "財團法人天主教失智老人社會福利基金會", "category": "失智", "subCategory": "失智據點", "district": "萬華區", "address": "臺北市萬華區保德里德昌街119號1樓", "phone": "(02)2332-0992#110", "capacity": "一般型", "note": "B-CS-71／連絡人：曾于鳳" },
+      { "name": "臺北市立聯合醫院和平婦幼院區", "category": "失智", "subCategory": "失智據點", "district": "萬華區", "address": "臺北市萬華區雙園里010鄰萬大路22號二樓", "phone": "(02)2555-3000#2097", "capacity": "一般型", "note": "B-CS-23／連絡人：謝育臻" },
+      { "name": "臺北市立聯合醫院和平婦幼院區2(莒光社宅)", "category": "失智", "subCategory": "失智據點", "district": "萬華區", "address": "臺北市萬華區福音里桂林路64號", "phone": "(02)2388-9595#2638", "capacity": "一般型", "note": "B-CS-79／連絡人：廖彥翔" },
+      { "name": "財團法人台灣老人急重症基金會", "category": "失智", "subCategory": "失智據點", "district": "中正區", "address": "臺北市中正區重慶南路三段27巷4號5樓(南門教會)", "phone": "(02)2522-4388", "capacity": "一般型", "note": "B-CS-05／連絡人：黃穗秋" },
+      { "name": "財團法人臺北市松年長春社會福利基金會", "category": "失智", "subCategory": "失智據點", "district": "中正區", "address": "臺北市中正區幸福里2鄰中山南路3號", "phone": "(02)2500-0261", "capacity": "一般型", "note": "B-CS-56／連絡人：黃怡婷" },
+      { "name": "財團法人佳醫健康基金會(中正區)", "category": "失智", "subCategory": "失智據點", "district": "中正區", "address": "臺北市中正區林森南路2號4樓", "phone": "(02)2225-8688#1352", "capacity": "一般型", "note": "B-CS-63／連絡人：張綺鈺" },
+      { "name": "大心居家職能治療所(中正區)", "category": "失智", "subCategory": "失智據點", "district": "中正區", "address": "臺北市中正區光復里博愛路105號2樓", "phone": "(02)7751-8057#11", "capacity": "一般型", "note": "B-CS-69／連絡人：林家郁" },
+      { "name": "社團法人台灣省私立台北仁濟院附設仁濟醫院", "category": "失智", "subCategory": "失智據點", "district": "中正區", "address": "臺北市中正區黎明里11鄰忠孝西路一段68號13樓", "phone": "(02)2303-1111#5700", "capacity": "一般型", "note": "B-CS-78／連絡人：蔡麗珍" },
+      { "name": "起辰職能治療所-1站", "category": "失智", "subCategory": "失智據點", "district": "大安區", "address": "臺北市大安區信義路四段65號3樓", "phone": "(02)2706-0055", "capacity": "一般型", "note": "B-CS-04／連絡人：方祥軒" },
+      { "name": "臺北市立聯合醫院仁愛院區", "category": "失智", "subCategory": "失智據點", "district": "大安區", "address": "臺北市大安區四維路198巷40號1樓", "phone": "(02)2709-3600#3715", "capacity": "一般型", "note": "B-CS-10／連絡人：郭智穎" },
+      { "name": "社團法人寧祈全人健康生命關懷協會(大安站)", "category": "失智", "subCategory": "失智據點", "district": "大安區", "address": "臺北市大安區仁愛路四段122巷54號(安和教會)", "phone": "(02)2521-3282", "capacity": "一般型", "note": "B-CS-46／連絡人：趙云甄" },
+      { "name": "財團法人佳醫健康基金會(大安區)", "category": "失智", "subCategory": "失智據點", "district": "大安區", "address": "臺北市大安區杭州南路二段1號(金甌女中810教室)", "phone": "(02)2225-8688#1352", "capacity": "一般型", "note": "B-CS-47／連絡人：林煒翎" },
+      { "name": "起辰職能治療所-2站", "category": "失智", "subCategory": "失智據點", "district": "大安區", "address": "臺北市大安區德安里四維路76巷12號5樓", "phone": "(02)2706-0055", "capacity": "一般型", "note": "B-CS-60／連絡人：方祥軒" },
+      { "name": "臺北市立聯合醫院松德院區(信義1站)", "category": "失智", "subCategory": "失智據點", "district": "信義區", "address": "臺北市信義區松隆里松山路657號", "phone": "(02)2726-3141#1003", "capacity": "一般型", "note": "B-CS-17／連絡人：高芷羚" },
+      { "name": "營佳營養諮詢中心", "category": "失智", "subCategory": "失智據點", "district": "信義區", "address": "臺北市信義區吳興街170巷1弄2號1樓", "phone": "0900-756-540", "capacity": "一般型", "note": "B-CS-52／連絡人：林貝珊" },
+      { "name": "中華民國紅心字會受託經營管理臺北市信義老人服務中心", "category": "失智", "subCategory": "失智據點", "district": "信義區", "address": "臺北市信義區大仁里大道路116號5樓之3", "phone": "(02)8787-0300#112", "capacity": "一般型", "note": "B-CS-61／連絡人：陳玟君（受經營委託管理）" },
+      { "name": "沐晨職能治療所(信義區)", "category": "失智", "subCategory": "失智據點", "district": "信義區", "address": "臺北市信義區莊敬路289巷25號1樓", "phone": "(02)2940-5818", "capacity": "一般型", "note": "B-CS-67／連絡人：孫瑋辰" },
+      { "name": "歲悅股份有限公司附設臺北市私立歲悅居家長照機構(信義區)", "category": "失智", "subCategory": "失智據點", "district": "信義區", "address": "臺北市信義區基隆路一段364巷6號1樓", "phone": "(02)6604-5432", "capacity": "一般型", "note": "B-CS-75／連絡人：黃致皓" },
+      { "name": "臺北市立聯合醫院忠孝院區", "category": "失智", "subCategory": "失智據點", "district": "南港區", "address": "臺北市南港區東新街108巷23號", "phone": "(02)2786-1288#8910", "capacity": "一般型", "note": "B-CS-07／連絡人：林宏修" },
+      { "name": "社團法人復生食物銀行全人關懷協會", "category": "失智", "subCategory": "失智據點", "district": "南港區", "address": "臺北市南港區南深路21巷16號", "phone": "(02)2782-2075", "capacity": "一般型", "note": "B-CS-42／連絡人：余冠慶" },
+      { "name": "台北市後山埤文化發展協會", "category": "失智", "subCategory": "失智據點", "district": "南港區", "address": "臺北市南港區聯成里東新街77巷29號1樓", "phone": "(02)2785-1737", "capacity": "一般型", "note": "B-CS-48／連絡人：李翠華" },
+      { "name": "財團法人佳醫健康基金會(文山站)", "category": "失智", "subCategory": "失智據點", "district": "文山區", "address": "臺北市文山區景美里羅斯福路六段336號(滬江高中信義樓102教室)", "phone": "(02)2225-8688#1352", "capacity": "一般型", "note": "B-CS-34／連絡人：張綺鈺" },
+      { "name": "沐晨職能治療所(文山區)", "category": "失智", "subCategory": "失智據點", "district": "文山區", "address": "臺北市文山區順興里保儀路138巷28號1、2樓", "phone": "(02)2940-5818", "capacity": "一般型", "note": "B-CS-66／連絡人：孫瑋辰" },
+      { "name": "景美醫院(權責型失智據點)", "category": "失智", "subCategory": "權責型據點", "district": "文山區", "address": "臺北市文山區景美里羅斯福路六段336號(滬江高中信義樓101教室)", "phone": "(02)2225-8688#1352", "capacity": "權責型", "note": "連絡人：張綺鈺／開辦時間：週一至週五全日" },
+      { "name": "臺北市立聯合醫院松德院區(信義2站)", "category": "失智", "subCategory": "權責型據點", "district": "信義區", "address": "臺北市信義區三犁里松德路309號6樓德智學園", "phone": "(02)2726-3141#1004", "capacity": "權責型", "note": "連絡人：曹瀞文／開辦時間：週一至週五全日／114.05.01開辦" },
       // ==========================================
-      { name: "景美醫院(權責型)", category: "失智", subCategory: "權責型據點", district: "文山區", address: "臺北市文山區羅斯福路六段336號", phone: "02-2225-8688#1352", capacity: "權責型", note: "週一至週五全日" },
-      { name: "聯醫信義2站(權責型)", category: "失智", subCategory: "權責型據點", district: "信義區", address: "臺北市信義區松德路309號", phone: "02-2726-3141#1003", capacity: "權責型", note: "週一至週五全日" },
 
       // ==========================================
       // 【失智資源】失智社區服務據點 (共52處編號，實有50家 - 114.05.15 官方清單)
       // ==========================================
       // --- 北投區 ---
-      { name: "臺北榮總失智治療及研究中心(據點)", category: "失智", subCategory: "失智據點", district: "北投區", address: "臺北市北投區三合街一段119號", phone: "02-2871-2121", capacity: "一般型", note: "奇岩里" },
-      { name: "老五老基金會(北投據點)", category: "失智", subCategory: "失智據點", district: "北投區", address: "臺北市北投區石牌路一段14號", phone: "02-2821-2959", capacity: "一般型", note: "福興里" },
-      { name: "林泉社區發展協會", category: "失智", subCategory: "失智據點", district: "北投區", address: "臺北市北投區新民路46巷37號", phone: "02-2895-2630", capacity: "一般型", note: "林泉里" },
-      { name: "臺北市立關渡醫院(據點)", category: "失智", subCategory: "失智據點", district: "北投區", address: "台北市北投區知行路260巷28號", phone: "02-2858-7000", capacity: "一般型", note: "關渡里" },
 
       // --- 士林區 ---
-      { name: "聯醫陽明院區神經內科據點", category: "失智", subCategory: "失智據點", district: "士林區", address: "臺北市士林區忠義街92號", phone: "02-2835-3456", capacity: "一般型", note: "聖山里" },
-      { name: "新康居家職能治療所(士林站)", category: "失智", subCategory: "失智據點", district: "士林區", address: "台北市士林區至誠路二段120巷1號", phone: "0911-505-217", capacity: "一般型", note: "名山里" },
-      { name: "慈光堂(士林據點)", category: "失智", subCategory: "失智據點", district: "士林區", address: "台北市士林區中社路一段43巷5號", phone: "02-2841-2290", capacity: "一般型", note: "翠山里" },
-      { name: "華夏婦女文教基金會", category: "失智", subCategory: "失智據點", district: "士林區", address: "台北市士林區至誠路一段62巷28號", phone: "0978-383-663", capacity: "一般型", note: "岩山里" },
-      { name: "大心居家職能治療所(士林站)", category: "失智", subCategory: "失智據點", district: "士林區", address: "臺北市士林區通河西街二段106號", phone: "02-2812-1740", capacity: "一般型", note: "葫東里" },
-      { name: "馬偕紀念醫院(士林據點)", category: "失智", subCategory: "失智據點", district: "士林區", address: "臺北市士林區中正路335巷11號5樓", phone: "02-2543-3535", capacity: "一般型", note: "福德里" },
 
       // --- 內湖區 ---
-      { name: "內湖老人服務中心(香柏樹)", category: "失智", subCategory: "失智據點", district: "內湖區", address: "臺北市內湖區康樂街110巷16弄20號5樓", phone: "02-2632-5560", capacity: "一般型", note: "東湖里" },
-      { name: "恩惠福音會(內湖據點)", category: "失智", subCategory: "失智據點", district: "內湖區", address: "台北市內湖區內湖路一段608號", phone: "02-2797-1000", capacity: "一般型", note: "港墘里" },
-      { name: "天使之家全人關懷協會", category: "失智", subCategory: "失智據點", district: "內湖區", address: "臺北市內湖區成功路二段242號", phone: "02-2790-9454", capacity: "一般型", note: "湖興里" },
 
       // --- 大同區 ---
-      { name: "慈濟基金會(大同站)", category: "失智", subCategory: "失智據點", district: "大同區", address: "臺北市大同區延平北路四段237號7樓", phone: "02-4051-0777", capacity: "一般型", note: "老師里" },
-      { name: "寧祈全人關懷協會(大同站)", category: "失智", subCategory: "失智據點", district: "大同區", address: "臺北市大同區甘州街40號7樓", phone: "02-2521-3282", capacity: "一般型", note: "延平里" },
-      { name: "大心居家職能治療所(大同站)", category: "失智", subCategory: "失智據點", district: "大同區", address: "台北市大同區承德路三段24巷38弄17號", phone: "02-2592-8780", capacity: "一般型", note: "蓬萊里" },
-      { name: "聯醫中興院區(大同據點)", category: "失智", subCategory: "失智據點", district: "大同區", address: "臺北市大同區南京西路440號", phone: "02-2552-3234", capacity: "一般型", note: "玉泉里" },
 
       // --- 中山區 ---
-      { name: "永和耕莘醫院(中山據點)", category: "失智", subCategory: "失智據點", district: "中山區", address: "臺北市中山區龍江路15號4樓", phone: "02-2778-5153", capacity: "一般型", note: "朱崙里" },
-      { name: "健順養護中心(中山老人住宅)", category: "失智", subCategory: "失智據點", district: "中山區", address: "台北市中山區新生北路二段101巷2號", phone: "02-2542-0006", capacity: "一般型", note: "中原里" },
-      { name: "新康居家職能治療所(中山站)", category: "失智", subCategory: "失智據點", district: "中山區", address: "台北市中山區松江路362巷65號", phone: "0911-505-217", capacity: "一般型", note: "行政里" },
-      { name: "馬偕紀念醫院(中山據點1)", category: "失智", subCategory: "失智據點", district: "中山區", address: "台北市中山區遼寧街105巷37號", phone: "02-2543-3535", capacity: "一般型", note: "力行里" },
 
       // --- 松山區 ---
-      { name: "佳醫健康基金會(松山站)", category: "失智", subCategory: "失智據點", district: "松山區", address: "臺北市松山區八德路二段410巷5弄1號", phone: "02-2225-8688", capacity: "一般型", note: "復勢里" },
-      { name: "向日葵慈善協會(松山據點)", category: "失智", subCategory: "失智據點", district: "松山區", address: "台北市松山區南京東路四段133巷7弄7號", phone: "02-8770-6501", capacity: "一般型", note: "東勢里" },
-      { name: "馬偕紀念醫院(中山據點2)", category: "失智", subCategory: "失智據點", district: "松山區", address: "台北市松山區敦化北路238巷9號", phone: "02-2543-3535", capacity: "一般型", note: "民有里" },
 
       // --- 萬華區 ---
-      { name: "立心慈善基金會(萬華)", category: "失智", subCategory: "失智據點", district: "萬華區", address: "臺北市萬華區福州街36號3樓", phone: "02-2336-6654", capacity: "一般型", note: "福音里" },
-      { name: "聯醫和平婦幼(萬華據點)", category: "失智", subCategory: "失智據點", district: "萬華區", address: "臺北市萬華區桂林路64號", phone: "02-2388-9595", capacity: "一般型", note: "老松國小" },
-      { name: "慈濟基金會(萬華站)", category: "失智", subCategory: "失智據點", district: "萬華區", address: "臺北市萬華區莒光路222號5樓", phone: "02-4051-0777", capacity: "一般型", note: "新據點" },
-      { name: "台大北護分院(據點)", category: "失智", subCategory: "失智據點", district: "萬華區", address: "臺北市萬華區成都路98號", phone: "02-2371-7101", capacity: "一般型", note: "菜園里" },
-      { name: "失智老人基金會(萬華)", category: "失智", subCategory: "失智據點", district: "萬華區", address: "臺北市萬華區德昌街119號", phone: "02-2332-0992", capacity: "一般型", note: "保德里" },
 
       // --- 中正區 ---
-      { name: "台灣老人急重症基金會", category: "失智", subCategory: "失智據點", district: "中正區", address: "臺北市中正區重慶南路三段27巷4號", phone: "02-2522-4388", capacity: "一般型", note: "南門教會" },
-      { name: "松年長春基金會", category: "失智", subCategory: "失智據點", district: "中正區", address: "臺北市中正區中山南路3號", phone: "02-2500-0263", capacity: "一般型", note: "幸福里" },
-      { name: "佳醫健康基金會(中正站)", category: "失智", subCategory: "失智據點", district: "中正區", address: "臺北市中正區林森南路2號4樓", phone: "02-2225-8688", capacity: "一般型", note: "林興里" },
-      { name: "大心居家職能治療所(中正站)", category: "失智", subCategory: "失智據點", district: "中正區", address: "台北市中正區博愛路105號", phone: "0978-260-675", capacity: "一般型", note: "光復里" },
 
       // --- 大安區 ---
-      { name: "起辰職能治療所-1站", category: "失智", subCategory: "失智據點", district: "大安區", address: "臺北市大安區信義路四段65號3樓", phone: "02-2706-0055", capacity: "一般型", note: "職能治療" },
-      { name: "聯醫仁愛院區(大安據點)", category: "失智", subCategory: "失智據點", district: "大安區", address: "臺北市大安區四維路198巷40號", phone: "02-2709-3600", capacity: "一般型", note: "成功國宅" },
-      { name: "寧祈全人關懷協會(大安站)", category: "失智", subCategory: "失智據點", district: "大安區", address: "臺北市大安區仁愛路四段122巷54號", phone: "02-2531-4495", capacity: "一般型", note: "安和教會" },
-      { name: "佳醫健康基金會(大安站)", category: "失智", subCategory: "失智據點", district: "大安區", address: "臺北市大安區杭州南路2段1號", phone: "02-2225-8688", capacity: "一般型", note: "金甌女中" },
-      { name: "起辰職能治療所-2站", category: "失智", subCategory: "失智據點", district: "大安區", address: "臺北市大安區四維路76巷12號", phone: "02-2706-0055", capacity: "一般型", note: "德安里" },
 
       // --- 信義區 ---
-      { name: "聯醫信義1站", category: "失智", subCategory: "失智據點", district: "信義區", address: "台北市信義區松山路657號", phone: "02-2726-3141", capacity: "一般型", note: "松隆里" },
-      { name: "營佳營養諮詢中心", category: "失智", subCategory: "失智據點", district: "信義區", address: "台北市信義區吳興街118巷26弄15號", phone: "0900-756-540", capacity: "一般型", note: "營養介入" },
-      { name: "聯醫信義2站(據點)", category: "失智", subCategory: "失智據點", district: "信義區", address: "台北市信義區松德路309號6樓", phone: "02-2726-3141", capacity: "一般型", note: "松德院區" },
-      { name: "紅心字會(信義)", category: "失智", subCategory: "失智據點", district: "信義區", address: "臺北市信義區大道路116號", phone: "02-8787-0300", capacity: "一般型", note: "廣慈園區" },
-      { name: "沐晨職能治療所(信義)", category: "失智", subCategory: "失智據點", district: "信義區", address: "臺北市信義區松勤街56號", phone: "0975-266-607", capacity: "一般型", note: "景新里" },
 
       // --- 南港區 ---
-      { name: "聯醫忠孝院區(南港據點)", category: "失智", subCategory: "失智據點", district: "南港區", address: "臺北市南港區東新街108巷23號", phone: "02-2786-1288", capacity: "一般型", note: "成福里" },
-      { name: "復生食物銀行(復生教會)", category: "失智", subCategory: "失智據點", district: "南港區", address: "臺北市南港區南深路21巷16號", phone: "02-2782-2075", capacity: "一般型", note: "舊莊地區" },
-      { name: "後山埤文化發展協會", category: "失智", subCategory: "失智據點", district: "南港區", address: "臺北市南港區東新街77巷29號", phone: "02-2785-1737", capacity: "一般型", note: "聯成里" },
 
       // --- 文山區 ---
-      { name: "聯醫文山職能工作坊", category: "失智", subCategory: "失智據點", district: "文山區", address: "臺北市文山區興隆路二段160號", phone: "02-2933-2373", capacity: "一般型", note: "興業里" },
-      { name: "恆安社福基金會(興岩)", category: "失智", subCategory: "失智據點", district: "文山區", address: "臺北市文山區興隆路二段88-3號", phone: "02-2234-4893", capacity: "一般型", note: "興岩社福" },
-      { name: "佳醫健康基金會(文山站)", category: "失智", subCategory: "失智據點", district: "文山區", address: "臺北市文山區羅斯福路六段336號", phone: "02-2225-8688", capacity: "一般型", note: "景美里" },
-      { name: "沐晨職能治療所(文山)", category: "失智", subCategory: "失智據點", district: "文山區", address: "臺北市文山區保儀路138巷28號", phone: "0975-266-607", capacity: "一般型", note: "順興里" },
 
       // ==========================================
-      // 【長照資源】住宿式長照機構 (新制/公辦民營/轉型) - 114年完整名單
+      // 【長照資源】住宿式長照機構 - 115年7月1日衛生局一覽表（12家）
+      { "name": "臺北市政府衛生局附設臺北市東明住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "南港區", "address": "臺北市南港區南港路二段60巷17號2樓", "phone": "(02)2651-9808", "capacity": "46床", "note": "公辦民營（委託財團法人台北市私立愛愛院經營管理）；立案109.05.29；114年度評鑑合格" },
+      { "name": "臺北市立奇岩長青住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "北投區", "address": "臺北市北投區三合街一段119號2-3樓", "phone": "(02)2893-0563", "capacity": "43床", "note": "公辦民營（委託社團法人中華民國士林靈糧堂社會福利協會經營管理）；立案110.01.15；111年度評鑑合格" },
+      { "name": "臺北市立聯合醫院附設中興住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "大同區", "address": "臺北市大同區鄭州路145號10樓B、C區", "phone": "(02)2552-3234轉1056", "capacity": "68床", "note": "公立（臺北市立聯合醫院附設）；立案110.02.17；111年度評鑑合格" },
+      { "name": "力麗長青長照社團法人附設台北市私立樂活住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "萬華區", "address": "臺北市萬華區環河南路二段278號2-5樓", "phone": "(02)2308-2996", "capacity": "59床", "note": "長照社團法人附設；立案110.11.16；111年度評鑑合格" },
+      { "name": "詠馨長照社團法人附設台北市私立詠馨住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "北投區", "address": "臺北市北投區幽雅路19號1-4樓", "phone": "(02)2890-8050", "capacity": "178床", "note": "長照社團法人附設；立案110.12.28；111年度評鑑合格" },
+      { "name": "劉秀娥長照社團法人附設臺北市私立宜恩住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "中山區", "address": "臺北市中山區伊通街28號1-7樓", "phone": "(02)2518-5855", "capacity": "82床", "note": "長照社團法人附設；立案111.04.25；112年度評鑑合格" },
+      { "name": "衛生福利部基隆醫院附設南港綜合長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "南港區", "address": "臺北市南港區南港路二段78號3-5樓", "phone": "(02)2789-1722轉411、412", "capacity": "71床", "note": "公立（部立基隆醫院附設，綜合式；另有社區式16人）；立案111.09.28；112年度評鑑合格" },
+      { "name": "臺北市立信義廣慈住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "信義區", "address": "臺北市信義區大道路116號3-5樓", "phone": "(02)8726-1105", "capacity": "93床", "note": "公辦民營（委託臺北市立聯合醫院忠孝院區經營管理）；立案112.01.17；113年度評鑑合格" },
+      { "name": "臺北市立行愛住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "內湖區", "address": "臺北市內湖區行善路250號1-2樓", "phone": "(02)2796-3886轉611", "capacity": "75床", "note": "公辦民營（委託臺北醫學大學經營管理）；立案113.02.29；114年度評鑑合格" },
+      { "name": "臺北市立興岩住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "文山區", "address": "臺北市文山區興隆路二段88號2樓之2", "phone": "(02)2736-7276", "capacity": "46床", "note": "公辦民營（委託臺北市立聯合醫院仁愛院區經營管理）；立案113.07.11；114年度評鑑合格" },
+      { "name": "臺北市立聯合醫院附設婦幼住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "中正區", "address": "臺北市中正區福州街12號7樓", "phone": "(02)2391-6470轉1726", "capacity": "18床", "note": "公立（臺北市立聯合醫院附設）；立案114.06.13；尚未評鑑（新設立滿一年內應受評鑑）" },
+      { "name": "臺北市立聯合醫院附設安興住宿長照機構", "category": "長照", "subCategory": "住宿式長照機構", "district": "大同區", "address": "臺北市大同區鄭州路145號6樓A區", "phone": "(02)2552-3234轉5695", "capacity": "24床", "note": "公立（臺北市立聯合醫院附設）；立案115.06.30；尚未評鑑（新設立滿一年內應受評鑑）" },
       // ==========================================
-      { name: "臺北市立奇岩長青住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "北投區", address: "臺北市北投區三合街一段119號", phone: "02-2893-0563", capacity: "43床", note: "公辦民營(士林靈糧堂)" },
-      { name: "臺北市立信義廣慈住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "信義區", address: "臺北市信義區大道路116號", phone: "02-8726-1105", capacity: "80床", note: "公辦民營(聯醫)" },
-      { name: "臺北市東明住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "南港區", address: "臺北市南港區南港路二段60巷17號", phone: "02-2651-9808", capacity: "46床", note: "公辦民營(愛愛院)" },
-      { name: "臺北市立行愛住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "內湖區", address: "臺北市內湖區行善路250號", phone: "02-2796-3886", capacity: "65床", note: "公辦民營(北醫)" },
-      { name: "臺北市立興岩住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "文山區", address: "臺北市文山區興隆路二段88號", phone: "02-2736-7276", capacity: "46床", note: "公辦民營(聯醫)" },
-      { name: "臺北市立中興住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "大同區", address: "臺北市大同區鄭州路145號", phone: "02-2552-3234", capacity: "68床", note: "公辦民營(聯醫)" },
-      { name: "臺北市立和平住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "中正區", address: "臺北市中正區中華路二段33號", phone: "02-2388-9595", capacity: "40床", note: "公辦民營(聯醫)" },
-      { name: "部立基隆醫院附設南港住宿長照", category: "長照", subCategory: "住宿式長照機構", district: "南港區", address: "臺北市南港區南港路二段78號", phone: "02-2789-1722", capacity: "71床", note: "公立機構" },
-      { name: "臺北市私立宜恩住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "中山區", address: "臺北市中山區伊通街28號", phone: "02-2518-5855", capacity: "82床", note: "私立轉型" },
-      { name: "臺北市私立樂活住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "萬華區", address: "臺北市萬華區環河南路二段278號", phone: "02-2308-2996", capacity: "59床", note: "私立轉型" },
-      { name: "臺北市私立詠馨住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "北投區", address: "臺北市北投區幽雅路19號", phone: "02-2890-8050", capacity: "178床", note: "大型機構" },
-      { name: "臺北市私立康寧住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "內湖區", address: "臺北市內湖區成功路五段420巷26號", phone: "02-2634-5500", capacity: "90床", note: "私立轉型" },
-      { name: "臺北市私立祥寶住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "大安區", address: "臺北市大安區和平東路二段265巷17號", phone: "02-2708-2255", capacity: "42床", note: "私立轉型" },
-      { name: "臺北市私立愛之隅住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "士林區", address: "臺北市士林區至善路二段421巷6號", phone: "02-2841-1633", capacity: "35床", note: "私立轉型" },
-      { name: "臺北市私立悠然山莊住宿長照機構", category: "長照", subCategory: "住宿式長照機構", district: "北投區", address: "臺北市北投區復興三路152巷12號", phone: "02-2891-2525", capacity: "45床", note: "私立轉型" },
 
       // ==========================================
 
       // ==========================================
-      // 【長照資源】護理之家 (衛生局管轄) - 114年擴充完整版
+      // 【長照資源】一般護理之家 - 115年4月官方名冊（18家；106年長照法後停止增設，新設機構屬住宿式長照）
+      { "name": "頤園護理之家", "category": "長照", "subCategory": "護理之家", "district": "士林區", "address": "臺北市士林區重慶北路4段138、140及142號1-4樓", "phone": "(02)2811-9666", "capacity": "69床", "note": "私立" },
+      { "name": "陽明常春護理之家", "category": "長照", "subCategory": "護理之家", "district": "士林區", "address": "臺北市士林區格致路7號2樓", "phone": "(02)2862-9997", "capacity": "80床", "note": "私立" },
+      { "name": "臺北市立聯合醫院附設陽明護理之家", "category": "長照", "subCategory": "護理之家", "district": "士林區", "address": "臺北市士林區雨聲街105號7、8樓", "phone": "(02)2835-3456轉5209、6866", "capacity": "89床", "note": "公立醫院附設" },
+      { "name": "百齡診所附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "士林區", "address": "臺北市士林區重慶北路4段187號", "phone": "(02)2811-3113", "capacity": "90床", "note": "私立診所附設" },
+      { "name": "吉翔護理之家", "category": "長照", "subCategory": "護理之家", "district": "大同區", "address": "臺北市大同區甘州街55號4、7、8樓", "phone": "(02)2552-0553", "capacity": "49床", "note": "私立" },
+      { "name": "大稻埕護理之家", "category": "長照", "subCategory": "護理之家", "district": "大同區", "address": "臺北市大同區環河北路1段73、75、77及79號1、2樓", "phone": "(02)2550-5197", "capacity": "24床", "note": "私立" },
+      { "name": "臺北市立聯合醫院附設仁愛護理之家", "category": "長照", "subCategory": "護理之家", "district": "大安區", "address": "臺北市大安區仁愛路4段10號(南棟5樓)", "phone": "(02)2709-3600轉1522", "capacity": "47床", "note": "公立醫院附設" },
+      { "name": "臺北市立聯合醫院附設和平婦幼護理之家", "category": "長照", "subCategory": "護理之家", "district": "中正區", "address": "臺北市中正區中華路2段33號B棟9樓", "phone": "(02)2388-9595轉8901-8903", "capacity": "40床", "note": "公立醫院附設" },
+      { "name": "三軍總醫院附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "中正區", "address": "臺北市中正區汀州路3段40號7-9樓", "phone": "(02)2365-9055轉11339", "capacity": "108床", "note": "公立醫院附設" },
+      { "name": "康寧醫療財團法人附設康寧護理之家", "category": "長照", "subCategory": "護理之家", "district": "內湖區", "address": "臺北市內湖區成功路5段420巷26號6、7樓", "phone": "(02)2634-5500轉8000、8601、8602", "capacity": "96床", "note": "醫療財團法人附設" },
+      { "name": "臺北市立萬芳醫院-委託財團法人臺北醫學大學辦理附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "文山區", "address": "臺北市文山區興隆路3段111號12樓", "phone": "(02)2930-7930轉52901", "capacity": "39床", "note": "公立醫院附設(委託經營)" },
+      { "name": "重建樂活護理之家", "category": "長照", "subCategory": "護理之家", "district": "文山區", "address": "臺北市文山區萬美街1段19巷3號1樓", "phone": "(02)2230-5663", "capacity": "22床", "note": "私立" },
+      { "name": "景美醫院附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "文山區", "address": "臺北市文山區萬慶街18號3、4樓", "phone": "(02)2933-2962", "capacity": "46床", "note": "私立醫院附設" },
+      { "name": "臺北市立關渡醫院-委託臺北榮民總醫院經營附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "北投區", "address": "臺北市北投區知行路225巷12號6、12樓", "phone": "(02)2858-7000轉7161", "capacity": "92床", "note": "公立醫院附設(委託經營)" },
+      { "name": "三軍總醫院松山分院附設民眾診療服務處附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "松山區", "address": "臺北市松山區健康路131號健康長青樓3、4樓", "phone": "(02)2764-2151轉671976", "capacity": "56床", "note": "公立醫院附設" },
+      { "name": "鵬程護理之家", "category": "長照", "subCategory": "護理之家", "district": "松山區", "address": "臺北市松山區健康路399號及399號2樓", "phone": "(02)8787-2011", "capacity": "47床", "note": "私立" },
+      { "name": "臺北市立聯合醫院附設忠孝護理之家", "category": "長照", "subCategory": "護理之家", "district": "南港區", "address": "臺北市南港區同德路87號6樓", "phone": "(02)2786-1288轉8764", "capacity": "48床", "note": "公立醫院附設" },
+      { "name": "國立臺灣大學醫學院附設醫院北護分院附設護理之家", "category": "長照", "subCategory": "護理之家", "district": "萬華區", "address": "臺北市萬華區內江街87號7、8、9樓", "phone": "(02)2371-7101轉218800、218700", "capacity": "59床", "note": "公立醫院附設" },
       // ==========================================
       // --- 士林區 (醫療資源重鎮) ---
-      { name: "聯醫陽明院區附設護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區雨聲街105號", phone: "02-2835-3456", capacity: "89床", note: "公立醫院附設" },
-      { name: "新光醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區文昌路95號", phone: "02-2833-2211", capacity: "30床", note: "醫學中心附設" },
-      { name: "百齡診所附設護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區重慶北路四段187號", phone: "02-2811-3113", capacity: "90床", note: "大型機構" },
-      { name: "頤園護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區重慶北路四段138號", phone: "02-2811-9666", capacity: "69床", note: "評鑑合格" },
-      { name: "陽明常春護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區格致路7號", phone: "02-2862-9997", capacity: "80床", note: "環境清幽" },
-      { name: "慈心護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區德行東路331巷38號", phone: "02-2832-5600", capacity: "40床", note: "天母地區" },
-      { name: "福林護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區中正路", phone: "02-2834-8899", capacity: "45床", note: "交通便利" },
-      { name: "士林護理之家", category: "長照", subCategory: "護理之家", district: "士林區", address: "臺北市士林區承德路四段", phone: "02-2883-6688", capacity: "50床", note: "近劍潭站" },
 
       // --- 北投區 ---
-      { name: "臺北榮民總醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區石牌路二段201號", phone: "02-2871-2121", capacity: "200床", note: "醫學中心附設" },
-      { name: "振興醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區振興街45號", phone: "02-2826-4400", capacity: "80床", note: "區域醫院附設" },
-      { name: "臺北市立關渡醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區知行路225巷12號", phone: "02-2858-7000", capacity: "92床", note: "榮總經營" },
-      { name: "孫逸仙護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區中央北路二段", phone: "02-2895-1234", capacity: "60床", note: "和信治癌旁" },
-      { name: "文化護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區文化三路", phone: "02-2894-5678", capacity: "40床", note: "近新北投" },
-      { name: "稻香護理之家", category: "長照", subCategory: "護理之家", district: "北投區", address: "臺北市北投區稻香路", phone: "02-2895-9988", capacity: "50床", note: "社區型" },
 
       // --- 內湖區 ---
-      { name: "康寧護理之家", category: "長照", subCategory: "護理之家", district: "內湖區", address: "臺北市內湖區成功路五段420巷26號", phone: "02-2634-5500", capacity: "96床", note: "大型機構" },
-      { name: "內湖護理之家", category: "長照", subCategory: "護理之家", district: "內湖區", address: "臺北市內湖區港墘路82巷11號", phone: "02-2657-5566", capacity: "30床", note: "社區型" },
-      { name: "安康護理之家", category: "長照", subCategory: "護理之家", district: "內湖區", address: "臺北市內湖區五分街56號", phone: "02-2630-9988", capacity: "45床", note: "近東湖站" },
-      { name: "康成護理之家", category: "長照", subCategory: "護理之家", district: "內湖區", address: "臺北市內湖區成功路二段", phone: "02-2792-6688", capacity: "49床", note: "近三總" },
-      { name: "大湖護理之家", category: "長照", subCategory: "護理之家", district: "內湖區", address: "臺北市內湖區大湖山莊街", phone: "02-2793-1234", capacity: "35床", note: "近大湖公園" },
 
       // --- 南港區 ---
-      { name: "聯醫忠孝院區附設護理之家", category: "長照", subCategory: "護理之家", district: "南港區", address: "臺北市南港區同德路87號", phone: "02-2786-1288", capacity: "48床", note: "公立醫院附設" },
-      { name: "福安護理之家", category: "長照", subCategory: "護理之家", district: "南港區", address: "臺北市南港區玉成街140巷21號", phone: "02-2785-0584", capacity: "20床", note: "小型機構" },
-      { name: "南港護理之家", category: "長照", subCategory: "護理之家", district: "南港區", address: "臺北市南港區重陽路166巷5號", phone: "02-2783-1122", capacity: "30床", note: "社區型" },
-      { name: "恩惠護理之家", category: "長照", subCategory: "護理之家", district: "南港區", address: "臺北市南港區福德街373巷29號", phone: "02-2785-8899", capacity: "40床", note: "近南港公園" },
 
       // --- 松山區 ---
-      { name: "三總松山分院附設護理之家", category: "長照", subCategory: "護理之家", district: "松山區", address: "臺北市松山區健康路131號", phone: "02-2764-2151", capacity: "56床", note: "區域醫院附設" },
-      { name: "博仁醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "松山區", address: "臺北市松山區光復北路66號", phone: "02-2578-6677", capacity: "40床", note: "地區醫院附設" },
-      { name: "鵬程護理之家", category: "長照", subCategory: "護理之家", district: "松山區", address: "臺北市松山區健康路399號", phone: "02-8787-2011", capacity: "47床", note: "近捷運站" },
-      { name: "健安護理之家", category: "長照", subCategory: "護理之家", district: "松山區", address: "臺北市松山區三民路95巷32號", phone: "02-2762-3355", capacity: "35床", note: "民生社區" },
-      { name: "松山護理之家", category: "長照", subCategory: "護理之家", district: "松山區", address: "臺北市松山區塔悠路19號", phone: "02-2766-8899", capacity: "49床", note: "河濱公園旁" },
 
       // --- 信義區 ---
-      { name: "臺北醫學大學附設醫院護理之家", category: "長照", subCategory: "護理之家", district: "信義區", address: "臺北市信義區吳興街252號", phone: "02-2737-2181", capacity: "50床", note: "醫學中心附設" },
-      { name: "信義護理之家", category: "長照", subCategory: "護理之家", district: "信義區", address: "臺北市信義區信義路六段76巷2弄12號", phone: "02-2727-8899", capacity: "30床", note: "社區型" },
-      { name: "安安護理之家", category: "長照", subCategory: "護理之家", district: "信義區", address: "臺北市信義區和平東路三段391巷8弄34號", phone: "02-2732-6688", capacity: "49床", note: "近麟光站" },
-      { name: "馨園護理之家", category: "長照", subCategory: "護理之家", district: "信義區", address: "臺北市信義區松山路650巷15弄6號", phone: "02-2727-1234", capacity: "40床", note: "永春高中附近" },
 
       // --- 大安區 ---
-      { name: "聯醫仁愛院區附設護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區仁愛路四段10號", phone: "02-2709-3600", capacity: "47床", note: "公立醫院附設" },
-      { name: "宏恩醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區仁愛路四段61號", phone: "02-2771-3161", capacity: "30床", note: "地區醫院附設" },
-      { name: "中心診所醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區忠孝東路四段77號", phone: "02-2751-0221", capacity: "20床", note: "東區商圈" },
-      { name: "仁群護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區四維路198巷30號", phone: "02-2705-8866", capacity: "35床", note: "成功國宅" },
-      { name: "祥寶護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區和平東路二段265巷17號", phone: "02-2708-2255", capacity: "42床", note: "科技大樓站" },
-      { name: "溫心護理之家", category: "長照", subCategory: "護理之家", district: "大安區", address: "臺北市大安區樂業街87號", phone: "02-2733-9966", capacity: "30床", note: "六張犁站" },
 
       // --- 中山區 ---
-      { name: "中山護理之家", category: "長照", subCategory: "護理之家", district: "中山區", address: "臺北市中山區松江路363號", phone: "02-2503-2626", capacity: "45床", note: "行天宮附近" },
-      { name: "長春護理之家", category: "長照", subCategory: "護理之家", district: "中山區", address: "臺北市中山區長春路366號", phone: "02-2712-3388", capacity: "40床", note: "近南京復興" },
-      { name: "圓山護理之家", category: "長照", subCategory: "護理之家", district: "中山區", address: "臺北市中山區酒泉街10巷11號", phone: "02-2597-6699", capacity: "38床", note: "圓山站附近" },
-      { name: "晨欣護理之家", category: "長照", subCategory: "護理之家", district: "中山區", address: "臺北市中山區中山北路二段96巷19號", phone: "02-2521-2226", capacity: "27床", note: "雙連站" },
-      { name: "貴族護理之家", category: "長照", subCategory: "護理之家", district: "中山區", address: "臺北市中山區建國北路二段33號", phone: "02-2515-0232", capacity: "49床", note: "精緻型" },
 
       // --- 中正區 ---
-      { name: "三軍總醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區汀州路三段40號", phone: "02-2365-9055", capacity: "108床", note: "醫學中心附設" },
-      { name: "聯醫和平婦幼護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區中華路二段33號", phone: "02-2388-9595", capacity: "40床", note: "公立醫院附設" },
-      { name: "郵政醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區福州街14號", phone: "02-2395-6755", capacity: "30床", note: "地區醫院附設" },
-      { name: "仁泰護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區連雲街3號", phone: "02-3393-1662", capacity: "31床", note: "東門站" },
-      { name: "康福護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區汀州路二段213號", phone: "02-2365-8855", capacity: "45床", note: "近河濱" },
-      { name: "博愛護理之家", category: "長照", subCategory: "護理之家", district: "中正區", address: "臺北市中正區重慶南路三段128號", phone: "02-2303-5566", capacity: "40床", note: "中正橋頭" },
 
       // --- 大同區 ---
-      { name: "聯醫中興院區附設護理之家", category: "長照", subCategory: "護理之家", district: "大同區", address: "臺北市大同區鄭州路145號", phone: "02-2552-3234", capacity: "50床", note: "公立醫院附設" },
-      { name: "吉翔護理之家", category: "長照", subCategory: "護理之家", district: "大同區", address: "臺北市大同區甘州街55號", phone: "02-2552-0557", capacity: "49床", note: "保安宮附近" },
-      { name: "大稻埕護理之家", category: "長照", subCategory: "護理之家", district: "大同區", address: "臺北市大同區環河北路一段73號", phone: "02-2550-5197", capacity: "24床", note: "河景第一排" },
-      { name: "慈恩護理之家", category: "長照", subCategory: "護理之家", district: "大同區", address: "臺北市大同區民權西路136號", phone: "02-2553-8899", capacity: "45床", note: "朝代戲院旁" },
-      { name: "大同護理之家", category: "長照", subCategory: "護理之家", district: "大同區", address: "臺北市大同區延平北路三段121號", phone: "02-2595-1234", capacity: "36床", note: "延三夜市" },
 
       // --- 萬華區 ---
-      { name: "臺大醫院北護分院附設護理之家", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區內江街87號", phone: "02-2371-7101", capacity: "59床", note: "區域醫院附設" },
-      { name: "西園醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區西園路二段270號", phone: "02-2307-6968", capacity: "40床", note: "地區醫院附設" },
-      { name: "立心慈善護理之家", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區梧州街36號", phone: "02-2336-9008", capacity: "49床", note: "龍山寺附近" },
-      { name: "慈安護理之家", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區西園路二段320號", phone: "02-2307-5566", capacity: "48床", note: "光復橋頭" },
-      { name: "康寧護理之家(萬華)", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區寶興街140號", phone: "02-2303-8855", capacity: "40床", note: "近果菜市場" },
-      { name: "榮民護理之家", category: "長照", subCategory: "護理之家", district: "萬華區", address: "臺北市萬華區中華路二段416號", phone: "02-2303-1234", capacity: "35床", note: "青年公園旁" },
 
       // --- 文山區 ---
-      { name: "萬芳醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區興隆路三段111號", phone: "02-2930-7930", capacity: "39床", note: "醫學中心附設" },
-      { name: "景美醫院附設護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區萬慶街18號", phone: "02-2933-2962", capacity: "46床", note: "地區醫院附設" },
-      { name: "重建樂活護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區萬美街一段19巷3號", phone: "02-2230-5663", capacity: "22床", note: "萬芳社區" },
-      { name: "文山護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區木柵路三段85巷10號", phone: "02-2939-5566", capacity: "49床", note: "木柵市場旁" },
-      { name: "興隆護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區興隆路二段220巷31號", phone: "02-2932-8899", capacity: "45床", note: "興隆公園" },
-      { name: "巨生護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區景興路202巷1號", phone: "02-2935-2233", capacity: "40床", note: "景美夜市附近" },
-      { name: "慈德護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區羅斯福路六段142巷10號", phone: "02-2933-1122", capacity: "30床", note: "萬隆站" },
-      { name: "康平護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區木新路三段200號", phone: "02-2936-8877", capacity: "48床", note: "近景美女中" },
-      { name: "長青護理之家", category: "長照", subCategory: "護理之家", district: "文山區", address: "臺北市文山區久康街20號", phone: "02-2939-1234", capacity: "25床", note: "木柵國小旁" },
 
       // ==========================================
       // 【長照資源】長者日間照顧 (日照中心) - 115年3月官方清冊（70家）
@@ -2716,87 +2660,125 @@
 
       // ==========================================
       // ==========================================
-      // 【長照資源】老人福利機構 (安養/養護/長照中心) - 114年精選收錄
+      // 【長照資源】老人福利機構 - 115年1月官方名冊（92家：公立2/公設民營3/私立87）
+      { "name": "臺北市至善老人安養護中心", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區永福里001鄰仰德大道2段2巷50號", "phone": "(02)2883-2666", "capacity": "471床", "note": "公設民營（委託天主教耕莘醫療財團法人永和耕莘醫院辦理）；安養/養護/長照型（安養153、養護194、長照124）" },
+      { "name": "臺北市私立璞園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區富光里010鄰葫蘆街33號4、5、6樓", "phone": "(02)2816-3696", "capacity": "46床", "note": "私立；養護型" },
+      { "name": "臺北市私立永青老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區天壽里003鄰中山北路6段427巷8號1~4樓", "phone": "(02)2876-1908", "capacity": "31床", "note": "私立；養護/長照型（養護18、長照13）" },
+      { "name": "臺北市私立祇福老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區三玉里016鄰忠誠路2段10巷11、13號1~2樓", "phone": "(02)2831-7713", "capacity": "39床", "note": "私立；養護型" },
+      { "name": "臺北市私立荷園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區富光里010鄰葫蘆街33號2~3樓", "phone": "(02)2816-3696", "capacity": "39床", "note": "私立；養護型" },
+      { "name": "臺北市私立柏安老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區蘭雅里024鄰中山北路6段290巷52、54號1樓", "phone": "(02)2833-3536", "capacity": "20床", "note": "私立；養護型" },
+      { "name": "臺北市私立松園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區蘭雅里020鄰德行東路61巷1、2、3號1~2樓", "phone": "(02)8866-2097", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立天玉老人長期照顧中心(長期照護型)", "category": "長照", "subCategory": "老人福利機構", "district": "士林區", "address": "臺北市士林區天玉街38巷18弄18號1-6樓", "phone": "(02)2872-0239", "capacity": "39床", "note": "私立；長期照護型" },
+      { "name": "臺北市私立慧光老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區星明里014鄰寧夏路32號5樓", "phone": "(02)2558-2275", "capacity": "40床", "note": "私立；養護型" },
+      { "name": "臺北市私立敦煌老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區重慶里014鄰敦煌路80巷3號及3-1號1樓", "phone": "(02)2594-5133", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立祥安尊榮老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區國順里008鄰延平北路3段4號2樓", "phone": "(02)2586-0098", "capacity": "47床", "note": "私立；養護型" },
+      { "name": "臺北市私立永安老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區老師里008鄰重慶北路3段284號2~4樓、286號1~4樓", "phone": "(02)2598-0197", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立德寶老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區建明里002鄰長安西路78巷4弄11號1~4樓", "phone": "(02)2552-2062", "capacity": "28床", "note": "私立；養護型" },
+      { "name": "臺北市私立仁家老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區延平里001鄰甘州街55號5~6樓", "phone": "(02)2553-0799", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立建順老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區延平里001鄰甘州街55號3樓", "phone": "(02)2552-0199", "capacity": "30床", "note": "私立；養護型" },
+      { "name": "臺北市私立建興老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區延平里001鄰甘州街55號2樓", "phone": "(02)2552-0199", "capacity": "31床", "note": "私立；養護型" },
+      { "name": "臺北市私立晉安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區至聖里032鄰重慶北路3段175、177號1~4樓", "phone": "(02)2598-2301、(02)2598-2401", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立祥寶尊榮老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大同區", "address": "臺北市大同區建泰里019鄰太原路97巷4、6號", "phone": "(02)2550-1118", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立天恩老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區龍門里008鄰新生南路3段7-4號、9-4號、9-5號", "phone": "(02)2362-0457、(02)2363-4382", "capacity": "48床", "note": "私立；養護型" },
+      { "name": "臺北市私立新常安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區黎孝里006鄰安居街46巷14號1~3樓及芳和里013鄰和平東路3段228巷39號2樓", "phone": "(02)2377-5448", "capacity": "39床", "note": "私立；養護型" },
+      { "name": "臺北市私立健全老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區錦華里001鄰金山南路2段152號2、3、5、6樓", "phone": "(02)2394-3265~6", "capacity": "47床", "note": "私立；養護/長照型（養護38、長照9）" },
+      { "name": "臺北市私立嘉恩老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區黎孝里008鄰安居街27號4、6樓及29號4、5樓", "phone": "(02)2737-1330", "capacity": "43床", "note": "私立；養護型" },
+      { "name": "臺北市私立康寧老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區光信里020鄰仁愛路4段300巷20弄15號2樓、17號2樓", "phone": "(02)2705-3835", "capacity": "30床", "note": "私立；養護型" },
+      { "name": "臺北市私立上上老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "大安區", "address": "臺北市大安區仁慈里009鄰復興南路1段279巷14、16號1樓", "phone": "(02)2703-2223", "capacity": "15床", "note": "私立；養護型" },
+      { "name": "臺北市私立晨欣老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區集英里006鄰中山北路2段96巷19號3樓", "phone": "(02)2521-2226", "capacity": "27床", "note": "私立；養護型" },
+      { "name": "臺北市私立松湛園老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區聚盛里003鄰錦州街4巷1號2樓、2樓之1", "phone": "(02)2565-2281", "capacity": "37床", "note": "私立；養護型" },
+      { "name": "臺北市私立松青園老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區民安里021鄰民生西路30號2樓、2樓之1~4", "phone": "(02)2511-0903", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立法泉老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區朱崙里012鄰八德路2段251號2樓", "phone": "(02)8773-1706", "capacity": "39床", "note": "私立；養護型" },
+      { "name": "臺北市私立龍江老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區力行里007鄰長安東路1段63號4樓", "phone": "(02)2567-2208", "capacity": "37床", "note": "私立；養護型" },
+      { "name": "臺北市私立仁群老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區下埤里019鄰民族東路512巷14號1~2樓、16號2樓", "phone": "(02)2501-3369", "capacity": "48床", "note": "私立；養護型" },
+      { "name": "臺北市私立群仁老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區下埤里019鄰民族東路512巷14號3~5樓", "phone": "(02)2501-0048", "capacity": "42床", "note": "私立；養護型" },
+      { "name": "臺北市私立福成老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區新福里004鄰松江路374、380、382號4樓", "phone": "(02)2598-2507", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立福喜老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中山區", "address": "臺北市中山區松江路374、380、382號7樓", "phone": "(02)2591-9087", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立仁泰老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中正區", "address": "臺北市中正區三愛里001鄰連雲街3號1、3樓、3之4號及新生南路1段124之3號5樓", "phone": "(02)3393-1662", "capacity": "31床", "note": "私立；養護型" },
+      { "name": "臺北市私立博愛老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中正區", "address": "臺北市中正區富水里001鄰汀州路3段56號2樓", "phone": "(02)2367-1050、(02)2367-1819", "capacity": "41床", "note": "私立；養護型" },
+      { "name": "臺北市私立大園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "中正區", "address": "臺北市中正區三愛里001鄰新生南路1段124之3號1~4樓", "phone": "(02)3393-1661", "capacity": "34床", "note": "私立；養護型" },
+      { "name": "臺北市私立銀髮族老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區成功路2段488號2~5樓、490號2樓、4樓", "phone": "(02)2792-6006", "capacity": "46床", "note": "私立；養護型" },
+      { "name": "臺北市私立童音老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區葫洲里004鄰民權東路6段280巷19弄1、3、5、7號1樓", "phone": "(02)2634-5131、(02)2634-5132", "capacity": "37床", "note": "私立；養護/長照型（養護32、長照5）" },
+      { "name": "臺北市私立湖濱老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區湖濱里010鄰內湖路2段179巷58、60號1樓", "phone": "(02)2793-3081", "capacity": "18床", "note": "私立；養護型" },
+      { "name": "臺北市私立瑞安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區紫陽里002鄰成功路3段88、90、92號2樓、76巷9號2樓", "phone": "(02)2792-5292", "capacity": "33床", "note": "私立；養護型" },
+      { "name": "臺北市私立祥家老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區湖濱里026鄰內湖路2段253巷1弄1、3號1-2樓", "phone": "(02)2792-2281", "capacity": "46床", "note": "私立；養護型" },
+      { "name": "臺北市私立文德老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "內湖區", "address": "臺北市內湖區紫陽里011鄰陽光街70-2、70-3、72、72-1號1樓", "phone": "(02)2658-1303", "capacity": "31床", "note": "私立；養護型" },
+      { "name": "臺北市政府社會局老人自費安養中心", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區忠順里009鄰興隆路4段109巷30弄6號", "phone": "(02)2939-3146", "capacity": "366床", "note": "公立；安養型" },
+      { "name": "臺北市私立景安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區景慶里001鄰溪口街1巷5號1~2樓", "phone": "(02)2932-5698", "capacity": "41床", "note": "私立；養護型" },
+      { "name": "臺北市私立心慈老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區興業里022鄰辛亥路5段120-1號1~4樓", "phone": "(02)2931-4730", "capacity": "22床", "note": "私立；養護型" },
+      { "name": "臺北市私立慧誠老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區木柵里025鄰木柵路2段163、165號1~5樓", "phone": "(02)2939-2222", "capacity": "48床", "note": "私立；養護型" },
+      { "name": "臺北市私立蓮馨老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區萬和街6號8樓", "phone": "(02)8230-0373", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立慈安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區萬有里001鄰興隆路1段2、4號1~4樓", "phone": "(02)2933-7745", "capacity": "47床", "note": "私立；養護型" },
+      { "name": "臺北市私立美安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區景慶里001鄰溪口街1巷5號3-4樓", "phone": "(02)2931-6388", "capacity": "45床", "note": "私立；養護型" },
+      { "name": "臺北市私立景興老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區景行里021鄰景興路222號3樓", "phone": "(02)2934-9412", "capacity": "38床", "note": "私立；養護型" },
+      { "name": "臺北市私立三園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區景行里002鄰車前路12號3-4樓", "phone": "(02)2932-1147", "capacity": "48床", "note": "私立；養護型" },
+      { "name": "臺北市私立吉祥老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區木柵里004鄰木柵路3段85巷8弄4-1、4-2號1樓及2、2-1、2-2、4、4-1、4-2號2樓", "phone": "(02)2234-3511", "capacity": "43床", "note": "私立；養護型" },
+      { "name": "臺北市文山老人養護中心", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區興豐里016鄰興隆路2段95巷8號3~6樓", "phone": "(02)8931-3190", "capacity": "46床", "note": "公設民營（委託財團法人利河伯社會福利基金會辦理）；養護型（含隔離室1床）" },
+      { "name": "臺北市兆如老人安養護中心", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區政大里005鄰政大二街129號", "phone": "(02)8661-6365", "capacity": "453床", "note": "公設民營（委託佳醫長照社團法人辦理）；安養/養護/長照型（安養189、養護132、長照132）" },
+      { "name": "臺北市私立慧華老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區興隆路2段154巷11號1樓", "phone": "(02)2935-6272", "capacity": "30床", "note": "私立；養護型" },
+      { "name": "臺北市私立萬芳老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "文山區", "address": "臺北市文山區萬和街8號3樓", "phone": "(02)2230-3000", "capacity": "48床", "note": "私立；養護型" },
+      { "name": "臺北市私立尊暉老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區石牌路2段343巷17號1~2樓", "phone": "(02)2876-1997", "capacity": "26床", "note": "私立；養護型" },
+      { "name": "臺北市私立賢暉老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區石牌路2段315巷34弄14、16號1樓", "phone": "(02)2871-0770", "capacity": "18床", "note": "私立；養護型" },
+      { "name": "臺北市私立高德老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區磺港路156號1~3樓", "phone": "(02)2898-2418", "capacity": "45床", "note": "私立；養護型" },
+      { "name": "臺北市私立陽明山老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區湖山里006鄰紗帽路116號", "phone": "(02)2861-5006", "capacity": "36床", "note": "私立；養護型" },
+      { "name": "臺北市私立全家老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永和里007鄰行義路96巷1號1~2樓", "phone": "(02)2876-1692", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立倚青園老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永明里008鄰義理街63巷4弄7、11之1~3號1樓", "phone": "(02)2828-3533", "capacity": "31床", "note": "私立；養護型" },
+      { "name": "臺北市私立榮健老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區建民里016鄰文林北路94巷5弄13號1~2樓、15號2樓", "phone": "(02)2821-6113", "capacity": "46床", "note": "私立；養護型" },
+      { "name": "臺北市私立全寶老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永欣里014鄰石牌路2段315巷16弄2、2-1號1樓", "phone": "(02)2871-0793", "capacity": "24床", "note": "私立；養護型" },
+      { "name": "臺北市私立義行老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永和里001鄰石牌路2段357巷1號4~6樓", "phone": "(02)2876-7880", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立建民老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區文林里019鄰建民路22、24、26、26之1號1樓", "phone": "(02)2825-0799", "capacity": "34床", "note": "私立；養護型" },
+      { "name": "臺北市私立榮祥老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區文林里019鄰文林北路166巷5弄2號1~2樓、4號1樓", "phone": "(02)2821-3709", "capacity": "34床", "note": "私立；養護型" },
+      { "name": "臺北市私立北投老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區公館路231巷20號1樓", "phone": "(02)2893-7412", "capacity": "17床", "note": "私立；養護型" },
+      { "name": "臺北市私立全泰老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永和里006鄰行義路105號1~2樓", "phone": "(02)2874-7739", "capacity": "41床", "note": "私立；養護型" },
+      { "name": "臺北市私立崇順老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區關渡里013鄰知行路52巷1號、54號1~2樓", "phone": "(02)2858-1979", "capacity": "27床", "note": "私立；養護型" },
+      { "name": "臺北市私立精英國際老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區關渡里003鄰關渡路60、62之1號1樓", "phone": "(02)2858-2701", "capacity": "26床", "note": "私立；養護型" },
+      { "name": "臺北市私立怡靜老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區吉利里002鄰致遠二路96巷3弄1、3號1樓", "phone": "(02)2820-0437", "capacity": "23床", "note": "私立；養護型" },
+      { "name": "臺北市私立貴族老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區大同里013鄰大業路452巷2號2~5樓", "phone": "(02)2896-5555", "capacity": "42床", "note": "私立；養護型" },
+      { "name": "臺北市私立行義老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區永和里001鄰石牌路2段357巷1號1~3樓", "phone": "(02)2872-9599", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立豪門老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區大同里013鄰大業路452巷2號6~9樓", "phone": "(02)2895-4492", "capacity": "42床", "note": "私立；養護型" },
+      { "name": "臺北市私立奇里岸老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區立農里013鄰西安街2段245號1、2樓", "phone": "(02)2827-5139", "capacity": "36床", "note": "私立；養護型" },
+      { "name": "財團法人台灣基督教道生院附設臺北市私立道生院老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區秀山里002鄰中和街錫安巷112號1、2樓及地下1樓", "phone": "(02)2893-6161", "capacity": "88床", "note": "財團法人附設；養護型" },
+      { "name": "臺北市立浩然敬老院", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區關渡里016鄰知行路75號", "phone": "(02)2858-1081", "capacity": "400床", "note": "公立；安養/養護型（安養225、養護175）" },
+      { "name": "臺北市私立同德老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "北投區", "address": "臺北市北投區榮華里004鄰明德路306號1-7樓", "phone": "(02)2828-1328", "capacity": "41床", "note": "私立；養護型" },
+      { "name": "臺北市私立群英老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "松山區", "address": "臺北市松山區仁愛里013鄰敦化南路1段7號4樓", "phone": "(02)2579-1400", "capacity": "24床", "note": "私立；養護型" },
+      { "name": "臺北市私立台大老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "松山區", "address": "臺北市松山區仁愛里013鄰敦化南路1段7號4樓之1", "phone": "(02)2579-2816", "capacity": "24床", "note": "私立；養護型" },
+      { "name": "臺北市私立仁仁老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "松山區", "address": "臺北市松山區新聚里003鄰南京東路5段356號2樓", "phone": "(02)2765-9900", "capacity": "34床", "note": "私立；養護型" },
+      { "name": "臺北市私立康壯老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "松山區", "address": "臺北市松山區吉祥里001鄰八德路4段203、205號1、2樓", "phone": "(02)2768-6697", "capacity": "49床", "note": "私立；養護型" },
+      { "name": "臺北市私立信義老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "信義區", "address": "臺北市信義區永春里002鄰中坡北路21號1~2樓、23號2樓", "phone": "(02)2747-7232", "capacity": "28床", "note": "私立；養護型" },
+      { "name": "臺北市私立康庭老人養護所", "category": "長照", "subCategory": "老人福利機構", "district": "信義區", "address": "臺北市信義區安康里017鄰信義路6段15巷16號1樓", "phone": "(02)2346-0684", "capacity": "29床", "note": "私立；養護型" },
+      { "name": "臺北市私立福安老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "南港區", "address": "臺北市南港區萬福里007鄰玉成街140巷21、23號2樓", "phone": "(02)2785-0584", "capacity": "20床", "note": "私立；養護型" },
+      { "name": "臺北市私立葉媽媽老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區錦德里012鄰西園路2段243之13號1~4樓", "phone": "(02)2332-9986", "capacity": "30床", "note": "私立；養護型" },
+      { "name": "財團法人天主教失智老人社會福利基金會附設臺北市私立聖若瑟失智老人養護中心", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區保德里001鄰德昌街125巷11號1~4樓、13號1樓", "phone": "(02)2304-6715~6、(02)2304-6602", "capacity": "62床", "note": "財團法人附設；失智照顧型" },
+      { "name": "臺北市私立葉爸爸老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區錦德里012鄰西園路2段243之14號1~4樓", "phone": "(02)2332-9985", "capacity": "31床", "note": "私立；養護型" },
+      { "name": "臺北市私立中山老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區菜園里001鄰峨眉街124號、124之1號1樓", "phone": "(02)2375-9590", "capacity": "26床", "note": "私立；養護型" },
+      { "name": "財團法人臺北市私立愛愛院", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區糖廍里006鄰大理街175巷27號", "phone": "(02)2306-0493", "capacity": "238床", "note": "財團法人；養護型" },
+      { "name": "臺北市私立軒儀老人長期照顧中心(養護型)", "category": "長照", "subCategory": "老人福利機構", "district": "萬華區", "address": "臺北市萬華區華江里028鄰和平西路3段384號1樓", "phone": "(02)2308-8661", "capacity": "47床", "note": "私立；養護型" },
       // ==========================================
       // --- 公立/公設民營/大型機構 ---
-      { name: "臺北市立浩然敬老院", category: "長照", subCategory: "老人福利機構", district: "北投區", address: "臺北市北投區知行路75號", phone: "02-28581081", capacity: "400床", note: "公立機構" },
-      { name: "臺北市至善老人安養護中心", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區仰德大道二段2巷50號", phone: "02-28832666", capacity: "471床", note: "公設民營" },
-      { name: "臺北市兆如老人安養護中心", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區政大二街129號", phone: "02-86616365", capacity: "453床", note: "公設民營" },
-      { name: "臺北市私立愛愛院", category: "長照", subCategory: "老人福利機構", district: "萬華區", address: "臺北市萬華區大理街175巷27號", phone: "02-23060493", capacity: "238床", note: "百年機構" },
-      { name: "臺北市朱崙老人公寓", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區龍江路15號", phone: "02-27785153", capacity: "安養型", note: "公設民營" },
-      { name: "臺北市陽明老人公寓", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區格致路7號", phone: "02-28619296", capacity: "安養型", note: "公設民營" },
-      { name: "臺北市中山老人住宅", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區新生北路二段101巷2號", phone: "02-25420006", capacity: "安養型", note: "公設民營" },
-      { name: "臺北市大龍老人住宅", category: "長照", subCategory: "老人福利機構", district: "大同區", address: "臺北市大同區民族西路105號", phone: "02-25850166", capacity: "安養型", note: "公設民營" },
 
       // --- 士林區 ---
-      { name: "私立恆安老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區延平北路六段263號", phone: "02-28151618", capacity: "49床", note: "長期照顧" },
-      { name: "私立璞園老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區葫蘆街33號", phone: "02-28163696", capacity: "46床", note: "長期照顧" },
-      { name: "私立慈心老人養護所", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區德行東路331巷38號", phone: "02-28325600", capacity: "40床", note: "養護型" },
-      { name: "私立雙溪老人養護所", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區至善路二段421巷6號", phone: "02-28411633", capacity: "35床", note: "養護型" },
-      { name: "私立聖安老人養護所", category: "長照", subCategory: "老人福利機構", district: "士林區", address: "臺北市士林區天母北路87巷18號", phone: "02-28723225", capacity: "28床", note: "養護型" },
 
       // --- 北投區 ---
-      { name: "私立祥安老人養護所", category: "長照", subCategory: "老人福利機構", district: "北投區", address: "臺北市北投區中央北路四段515巷3弄2號", phone: "02-28913333", capacity: "49床", note: "養護型" },
-      { name: "私立大屯老人養護所", category: "長照", subCategory: "老人福利機構", district: "北投區", address: "臺北市北投區復興三路152巷12號", phone: "02-28912525", capacity: "45床", note: "養護型" },
-      { name: "私立稻香老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "北投區", address: "臺北市北投區稻香路10號", phone: "02-28935566", capacity: "49床", note: "長期照顧" },
-      { name: "私立馨園老人養護所", category: "長照", subCategory: "老人福利機構", district: "北投區", address: "臺北市北投區中和街457號", phone: "02-28956677", capacity: "30床", note: "養護型" },
 
       // --- 內湖區 ---
-      { name: "私立康寧老人養護所", category: "長照", subCategory: "老人福利機構", district: "內湖區", address: "臺北市內湖區康寧路三段75巷137號", phone: "02-26345500", capacity: "49床", note: "養護型" },
-      { name: "私立銀髮族老人養護所", category: "長照", subCategory: "老人福利機構", district: "內湖區", address: "臺北市內湖區成功路二段488號", phone: "02-27926006", capacity: "46床", note: "養護型" },
-      { name: "私立內湖老人養護所", category: "長照", subCategory: "老人福利機構", district: "內湖區", address: "臺北市內湖區港墘路82巷11號", phone: "02-26575566", capacity: "30床", note: "養護型" },
-      { name: "私立安康老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "內湖區", address: "臺北市內湖區五分街56號", phone: "02-26309988", capacity: "45床", note: "長期照顧" },
 
       // --- 南港區 ---
-      { name: "私立福安老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "南港區", address: "臺北市南港區玉成街140巷21號", phone: "02-27850584", capacity: "20床", note: "長期照顧" },
-      { name: "私立南港老人養護所", category: "長照", subCategory: "老人福利機構", district: "南港區", address: "臺北市南港區重陽路166巷5號", phone: "02-27831122", capacity: "30床", note: "養護型" },
-      { name: "私立恩惠老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "南港區", address: "臺北市南港區福德街373巷29號", phone: "02-27858899", capacity: "40床", note: "長期照顧" },
 
       // --- 松山區 ---
-      { name: "私立群英老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "松山區", address: "臺北市松山區敦化南路一段7號", phone: "02-25791400", capacity: "24床", note: "長期照顧" },
-      { name: "私立松山老人養護所", category: "長照", subCategory: "老人福利機構", district: "松山區", address: "臺北市松山區塔悠路19號", phone: "02-27668899", capacity: "49床", note: "養護型" },
-      { name: "私立健安老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "松山區", address: "臺北市松山區三民路95巷32號", phone: "02-27623355", capacity: "35床", note: "長期照顧" },
 
       // --- 信義區 ---
-      { name: "私立信義老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "信義區", address: "臺北市信義區中坡北路21號", phone: "02-27477232", capacity: "28床", note: "長期照顧" },
-      { name: "私立安安老人養護所", category: "長照", subCategory: "老人福利機構", district: "信義區", address: "臺北市信義區和平東路三段391巷8弄34號", phone: "02-27326688", capacity: "49床", note: "養護型" },
-      { name: "私立馨園老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "信義區", address: "臺北市信義區松山路650巷15弄6號", phone: "02-27271234", capacity: "40床", note: "長期照顧" },
 
       // --- 大安區 ---
-      { name: "私立天恩老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "大安區", address: "臺北市大安區新生南路三段7-4號", phone: "02-23620457", capacity: "48床", note: "長期照顧" },
-      { name: "私立大安老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "大安區", address: "臺北市大安區四維路198巷30號", phone: "02-27058866", capacity: "35床", note: "長期照顧" },
-      { name: "私立祥寶老人養護所", category: "長照", subCategory: "老人福利機構", district: "大安區", address: "臺北市大安區和平東路二段265巷17號", phone: "02-27082255", capacity: "42床", note: "養護型" },
-      { name: "私立溫心老人養護所", category: "長照", subCategory: "老人福利機構", district: "大安區", address: "臺北市大安區樂業街87號", phone: "02-27339966", capacity: "30床", note: "養護型" },
 
       // --- 中山區 ---
-      { name: "私立晨欣老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區中山北路二段96巷19號", phone: "02-25212226", capacity: "27床", note: "長期照顧" },
-      { name: "私立貴族老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區建國北路二段33號", phone: "02-25150232", capacity: "49床", note: "長期照顧" },
-      { name: "私立長春老人養護所", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區長春路366號", phone: "02-27123388", capacity: "40床", note: "養護型" },
-      { name: "私立圓山老人養護所", category: "長照", subCategory: "老人福利機構", district: "中山區", address: "臺北市中山區酒泉街10巷11號", phone: "02-25976699", capacity: "38床", note: "養護型" },
 
       // --- 中正區 ---
-      { name: "私立仁泰老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "中正區", address: "臺北市中正區連雲街3號", phone: "02-33931662", capacity: "31床", note: "長期照顧" },
-      { name: "私立康福老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "中正區", address: "臺北市中正區汀州路二段213號", phone: "02-23658855", capacity: "45床", note: "長期照顧" },
-      { name: "私立博愛老人養護所", category: "長照", subCategory: "老人福利機構", district: "中正區", address: "臺北市中正區重慶南路三段128號", phone: "02-23035566", capacity: "40床", note: "養護型" },
 
       // --- 大同區 ---
-      { name: "私立慧光老人養護所", category: "長照", subCategory: "老人福利機構", district: "大同區", address: "臺北市大同區寧夏路32號5樓", phone: "02-25582275", capacity: "40床", note: "養護型" },
-      { name: "私立大同老人養護所", category: "長照", subCategory: "老人福利機構", district: "大同區", address: "臺北市大同區延平北路三段121號", phone: "02-25951234", capacity: "36床", note: "養護型" },
-      { name: "私立慈恩老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "大同區", address: "臺北市大同區民權西路136號", phone: "02-25538899", capacity: "45床", note: "長期照顧" },
 
       // --- 萬華區 ---
-      { name: "私立立心慈善老人養護所", category: "長照", subCategory: "老人福利機構", district: "萬華區", address: "臺北市萬華區梧州街36號", phone: "02-23369008", capacity: "49床", note: "養護型" },
-      { name: "私立慈安老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "萬華區", address: "臺北市萬華區西園路二段320號", phone: "02-23075566", capacity: "48床", note: "長期照顧" },
-      { name: "私立康寧老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "萬華區", address: "臺北市萬華區寶興街140號", phone: "02-23038855", capacity: "40床", note: "長期照顧" },
-      { name: "私立榮民老人養護所", category: "長照", subCategory: "老人福利機構", district: "萬華區", address: "臺北市萬華區中華路二段416號", phone: "02-23031234", capacity: "35床", note: "養護型" },
 
       // --- 文山區 ---
-      { name: "私立文山老人養護所", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區木柵路三段85巷10號", phone: "02-29395566", capacity: "49床", note: "養護型" },
-      { name: "私立興隆老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區興隆路二段220巷31號", phone: "02-29328899", capacity: "45床", note: "長期照顧" },
-      { name: "私立巨生老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區景興路202巷1號", phone: "02-29352233", capacity: "40床", note: "長期照顧" },
-      { name: "私立慈德老人養護所", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區羅斯福路六段142巷10號", phone: "02-29331122", capacity: "30床", note: "養護型" },
-      { name: "私立康平老人長期照顧中心", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區木新路三段200號", phone: "02-29368877", capacity: "48床", note: "長期照顧" },
-      { name: "私立長青老人養護所", category: "長照", subCategory: "老人福利機構", district: "文山區", address: "臺北市文山區久康街20號", phone: "02-29391234", capacity: "25床", note: "養護型" },
 
       // ==========================================
       // 【身障資源】小作所 (114年完整名單)
@@ -2858,26 +2840,15 @@
       { name: "勝利數位設計印刷中心", category: "身障", subCategory: "庇護工場", district: "大安區", address: "臺北市大安區和平東路二段107巷11弄4號", phone: "02-2325-8136", note: "印刷設計" },
 
       // ==========================================
-      // 【身障資源】身障社區長照機構 (日間照顧) - 114年完整名單
+      // 【身障資源】身障社區長照機構(日間照顧) - 115年官方一覽表（7家，2026-05-13更新）
+      { "name": "景新身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "文山區", "address": "臺北市文山區景後街151號4樓", "phone": "(02)2935-5560", "capacity": "45人", "note": "財團法人中華民國唐氏症基金會" },
+      { "name": "民生身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "松山區", "address": "臺北市松山區民生東路五段163之1號7樓", "phone": "(02)2760-9605", "capacity": "60人", "note": "財團法人伊甸社會福利基金會" },
+      { "name": "中山身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "中山區", "address": "臺北市中山區長安西路5巷2號4樓", "phone": "(02)2521-1032", "capacity": "30人", "note": "財團法人喜憨兒社會福利基金會" },
+      { "name": "大龍峒身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "大同區", "address": "臺北市大同區重慶北路三段320號3、4樓（社福大樓）", "phone": "(02)2592-2581", "capacity": "45人", "note": "財團法人臺北市喜樂家族社會福利基金會" },
+      { "name": "稻香身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "北投區", "address": "臺北市北投區稻香路81號3樓之1", "phone": "(02)2898-8308", "capacity": "40人", "note": "財團法人天主教白永恩神父社會福利基金會" },
+      { "name": "興岩身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "文山區", "address": "臺北市文山區興隆路二段88號3樓", "phone": "(02)8931-7707", "capacity": "40人", "note": "財團法人臺北市喜樂家族社會福利基金會" },
+      { "name": "福星身障社區長照機構（日間照顧）", "category": "身障", "subCategory": "身障日間照顧", "district": "萬華區", "address": "臺北市萬華區開封街二段39號3樓之1", "phone": "(02)2382-1448", "capacity": "30人", "note": "社團法人中華民國士林靈糧堂社會福利協會" },
       // ==========================================
-      { name: "景新身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "文山區", address: "臺北市文山區景後街151號4樓", phone: "02-2935-5560", capacity: "45人", note: "唐氏症基金會" },
-      { name: "興岩身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "文山區", address: "臺北市文山區興隆路二段88號3樓", phone: "02-2930-0168", capacity: "40人", note: "育成基金會" },
-      { name: "萬芳身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "文山區", address: "臺北市文山區萬美街一段55號1樓", phone: "02-2239-5632", capacity: "30人", note: "伊甸基金會" },
-      { name: "民生身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "松山區", address: "臺北市松山區民生東路5段163之1號7樓", phone: "02-2760-9605", capacity: "60人", note: "伊甸基金會" },
-      { name: "弘愛身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "松山區", address: "臺北市松山區光復南路22巷42號", phone: "02-2756-9669", capacity: "35人", note: "弘愛服務中心" },
-      { name: "中山身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "中山區", address: "臺北市中山區長安西路5巷2號4樓", phone: "02-2521-1032", capacity: "30人", note: "喜憨兒基金會" },
-      { name: "大龍峒身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "大同區", address: "臺北市大同區重慶北路3段320號3、4樓", phone: "02-2592-2581", capacity: "45人", note: "喜樂家族" },
-      { name: "稻香身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "北投區", address: "臺北市北投區稻香路81號3樓之1", phone: "02-2898-8308", capacity: "40人", note: "白永恩神父基金會" },
-      { name: "廣慈身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "信義區", address: "臺北市信義區大道路116號3樓", phone: "02-2726-2670", capacity: "45人", note: "伊甸基金會" },
-      { name: "永福身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "士林區", address: "臺北市士林區莊頂路2號", phone: "02-2861-1380", capacity: "30人", note: "永福之家" },
-      { name: "三玉身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "士林區", address: "臺北市士林區忠誠路二段53巷7號5樓", phone: "02-2838-5178", capacity: "30人", note: "唐氏症基金會" },
-      { name: "西湖身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "內湖區", address: "臺北市內湖區內湖路一段285號4樓", phone: "02-2627-1230", capacity: "20人", note: "智障者家長協會" },
-      { name: "龍山身障社區長照機構", category: "身障", subCategory: "身障日間照顧", district: "萬華區", address: "臺北市萬華區梧州街36號4樓", phone: "02-2308-5658", capacity: "35人", note: "台北市智障者家長協會" },
-      { name: "華江身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "萬華區", address: "臺北市萬華區環河南路二段284號", phone: "02-2306-0306", capacity: "25人", note: "育成基金會" },
-      { name: "南港身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "南港區", address: "臺北市南港區重陽路187巷6號2樓", phone: "02-2785-5026", capacity: "30人", note: "育成基金會" },
-      { name: "中正身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "中正區", address: "臺北市中正區延平南路207號2樓", phone: "02-2311-2098", capacity: "25人", note: "順手做公益協會" },
-      { name: "城中身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "中正區", address: "臺北市中正區忠孝東路一段58號4樓", phone: "02-2391-7662", capacity: "30人", note: "育成基金會" },
-      { name: "大安身障日間照顧中心", category: "身障", subCategory: "身障日間照顧", district: "大安區", address: "臺北市大安區辛亥路三段223號2樓", phone: "02-2732-2342", capacity: "30人", note: "育成基金會" },
 
       // ==========================================
       // 【精神資源】精神護理之家
@@ -2948,6 +2919,14 @@
       if (typeof googleSheetCSVUrl !== 'undefined' && googleSheetCSVUrl.startsWith("http")) {
         loadGoogleSheetData();
       }
+
+      // 特約門市名單（社會局 ODS 每週自動同步，取代內嵌 A- 條目）
+      fetch('data/vendors.json').then(r => r.ok ? r.json() : null).then(j => {
+        if (!j || !j.items || j.items.length < 250) return;
+        resourcesData = resourcesData.filter(r => !r.id.startsWith('A-')).concat(j.items);
+        if (document.getElementById('vendorSearch')) updateVendorList();
+        console.log(`成功載入 ${j.items.length} 筆 特約門市（同源快取 ${j.updated}）`);
+      }).catch(() => {});
 
       // 每週自動同步的機構名單（GitHub Actions 產出，取代內嵌舊資料）
       [['data/workshops.json', '庇護工場', 30], ['data/xiaozuosuo.json', '小作所', 15]].forEach(([url, subcat, minN]) => {

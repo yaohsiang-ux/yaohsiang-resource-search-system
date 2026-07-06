@@ -27,5 +27,17 @@
  "daycare_roster": {
   "hash": "0415185f4c91012cfef05cc4e435523d9ecfea070769d84646dea8da0eab1c15",
   "checked": "2026-07-05"
+ },
+ "elder_roster": {
+  "hash": "805fad07b8609a05d1bfe7fec3270be9d8edc555f7b962555754de9fafefab95",
+  "checked": "2026-07-05"
+ },
+ "residential_roster": {
+  "hash": "463fca5d304d748c15a6c21569274434208fb85e81f0490b810d9d6c1e71c82a",
+  "checked": "2026-07-05"
+ },
+ "nursing_roster": {
+  "hash": "4e82e5f917402953a3e33b77be6300d40025855ff8abeaf2a1e8faa4e35b4b56",
+  "checked": "2026-07-05"
  }
 }

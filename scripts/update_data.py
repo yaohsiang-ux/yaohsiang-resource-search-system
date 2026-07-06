@@ -52,6 +52,15 @@ SOURCES = {
     "daycare_roster": ("社會局 日照及小規機一覽表頁附件",
                        "https://dosw.gov.taipei/cp.aspx?n=3E3C1D86A51BF473&s=B72AFFE457F98DE1",
                        "attachments"),
+    "elder_roster": ("社會局 老人福利機構名冊頁附件",
+                     "https://dosw.gov.taipei/News_Content.aspx?n=43A90D45AB7831E2&s=BAABA2454E899F9C",
+                     "attachments"),
+    "residential_roster": ("衛生局 住宿式長照機構一覽表頁附件",
+                           "https://health.gov.taipei/News.aspx?n=E139461B864ECC75&sms=5F83E3615F00C15F",
+                           "attachments"),
+    "nursing_roster": ("衛生局 一般護理之家一覽表頁附件",
+                       "https://health.gov.taipei/News_Content.aspx?n=B283D71AA0A7D98A&sms=EDD21D8B4B037BC3&s=3B9E85AB87282057",
+                       "attachments"),
 }
 
 HEALTH_LIST_PAGE = "https://health.gov.taipei/News.aspx?n=3B14F55B09E96685&sms=8F0619542D0F4F55"
@@ -241,6 +250,107 @@ def sync_xiaozuosuo():
     _save_facility_json("xiaozuosuo.json", "小作所", items, 15)
 
 
+VENDORS_PAGE = "https://dosw.gov.taipei/cp.aspx?n=457FA2416BF17247&s=74E8961109D68F2E"
+
+
+def sync_vendors():
+    """臺北市特約輔具門市（社會局 ODS 名單，只取臺北市）→ data/vendors.json
+    groups 由官方 ● 欄位對應；items 品項標籤沿用 data/vendor_items_map.json（手工維護）。"""
+    import base64
+    import html as h
+    import io
+    import urllib.parse as up
+    import zipfile
+    from xml.etree import ElementTree as ET
+
+    # 1. 從專區頁動態找 ODS 附件（重新上傳時網址會變）
+    page = fetch(VENDORS_PAGE)
+    ods_url = None
+    for m in re.finditer(r'href="(https://www-ws\.gov\.taipei/Download\.ashx[^"]+)"', page):
+        u = h.unescape(m.group(1))
+        q = up.parse_qs(up.urlparse(u).query)
+        try:
+            name = base64.b64decode(up.unquote(q["n"][0])).decode("utf-8")
+        except Exception:
+            continue
+        if name.endswith(".ods") and "門市名單" in name:
+            ods_url = u
+            break
+    if not ods_url:
+        print("::error::找不到門市名單 ODS 附件", file=sys.stderr)
+        return
+
+    # 2. 解析 ODS 主分頁（stdlib：zip + XML）
+    TNS = "{urn:oasis:names:tc:opendocument:xmlns:table:1.0}"
+    PNS = "{urn:oasis:names:tc:opendocument:xmlns:text:1.0}p"
+    z = zipfile.ZipFile(io.BytesIO(fetch(ods_url, binary=True)))
+    root = ET.fromstring(z.read("content.xml"))
+    table = next(t for t in root.iter(TNS + "table")
+                 if "特約服務門市名單" in (t.get(TNS + "name") or ""))
+
+    def row_cells(r):
+        cells = []
+        for c in r.iter(TNS + "table-cell"):
+            rep = int(c.get(TNS + "number-columns-repeated", 1))
+            paras = [" ".join("".join(p.itertext()).split()) for p in c.iter(PNS)]
+            txt = "、".join(x for x in paras if x)
+            if rep < 50:
+                cells.extend([txt] * min(rep, 2))
+        return cells
+
+    rows = list(table.iter(TNS + "table-row"))
+    # 表頭列：含「特約門市名稱」那一列，取得欄位索引
+    header_idx = None
+    for ri, r in enumerate(rows[:5]):
+        cs = row_cells(r)
+        if any("特約門市名稱" in c for c in cs):
+            header_idx = ri
+            header = cs
+            break
+    col = {}
+    for i, cname in enumerate(header):
+        for key, pat in [("seq", "序號"), ("name", "特約門市名稱"), ("phone", "連絡電話"),
+                         ("addr", "特約門市地址"), ("city", "縣市別"), ("dist", "行政區"),
+                         ("buy", "長照輔具(購買)"), ("rent", "長照輔具(租賃)"),
+                         ("barrier", "居家無障礙"), ("dis", "身障輔具"), ("hearing", "助聽器")]:
+            if pat in cname and key not in col:
+                col[key] = i
+
+    item_map = json.loads((DATA / "vendor_items_map.json").read_text(encoding="utf-8"))
+
+    def norm(s):
+        return re.sub(r"[\s（）()「」【】\-‐]", "", s or "")
+
+    items_out, seq_taipei = [], 0
+    need = max(col.values()) + 1
+    for r in rows[header_idx + 1:]:
+        cs = row_cells(r)
+        cs += [""] * (need - len(cs))  # ODS 會省略列尾空儲存格
+        if cs[col["city"]].strip() != "臺北市" or not cs[col["seq"]].strip().isdigit():
+            continue
+        name, addr = cs[col["name"]].strip(), cs[col["addr"]].strip()
+        if not name:
+            continue
+        seq_taipei += 1
+        groups = []
+        if "●" in cs[col["buy"]]: groups.append("長照購置")
+        if "●" in cs[col["rent"]]: groups.append("長照租賃")
+        if "●" in cs[col["dis"]]: groups.append("身障購置")
+        if "●" in cs[col["barrier"]]: groups.append("無障礙環境改善")
+        items = list(item_map.get(norm(name)) or item_map.get(norm(addr)) or [])
+        if "●" in cs[col["hearing"]] and "助聽器" not in items:
+            items.append("助聽器")
+        if "無障礙環境改善" in groups and "居家無障礙環境改善" not in items:
+            items.append("居家無障礙環境改善")
+        phone = cs[col["phone"]].strip()
+        items_out.append({
+            "id": f"A-{seq_taipei:03d}", "district": cs[col["dist"]].strip(),
+            "name": name, "address": addr, "phone": phone,
+            "groups": groups, "items": items, "source": "社會局特約名單",
+        })
+    _save_facility_json("vendors.json", "特約門市", items_out, 250)
+
+
 def extract_attachments(html):
     """萃取頁面上 Download.ashx 附件的檔名清單（穩定訊號，避免整頁 hash 誤報）"""
     import base64
@@ -332,6 +442,7 @@ if __name__ == "__main__":
         sync_ei_products()
         sync_sheltered_workshops()
         sync_xiaozuosuo()
+        sync_vendors()
     elif cmd == "watch":
         watch()
     else:
