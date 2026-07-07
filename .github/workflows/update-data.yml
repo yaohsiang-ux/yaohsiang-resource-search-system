@@ -15,7 +15,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: 同步 C級巷弄站（Google Sheet → data/c_stations.json）
+      - name: 安裝相依套件（A單位 PDF 解析）
+        run: pip install pdfplumber
+
+      - name: 同步各資料源（C級站/智慧輔具/庇護工場/小作所/特約門市/A單位）
         run: python3 scripts/update_data.py sync
 
       - name: 官方來源異動偵測

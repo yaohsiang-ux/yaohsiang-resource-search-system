@@ -1352,7 +1352,7 @@
     /* ==================== 1. 資料庫 ==================== */
 
     // A 單位資料 (完整 62 筆)
-    const aUnitData = [
+    let aUnitData = [
       // 資料來源：臺北市政府衛生局「臺北市社區整合型服務中心(A單位)一覽表」115年04月21日更新，共69家
       { "id": "1", "title": "臺北市立聯合醫院(仁愛院區)", "district": "大安區", "address": "臺北市大安區仁愛路四段10號", "tel": "(02)2709-3600 分機3565", "area": "臥龍次分區(臥龍里、芳和里、虎嘯里、群英里、黎元里、黎孝里、黎和里)" },
       { "id": "2", "title": "財團法人恆安社會福利慈善事業基金會【1】", "district": "大安區", "address": "臺北市大安區和平東路二段295號12樓", "tel": "(02)2333-1955", "area": "和平次分區(古莊里、龍坡里)、學府次分區(大學里、古風里、學府里、龍淵里、龍門里)" },
@@ -2926,6 +2926,15 @@
         resourcesData = resourcesData.filter(r => !r.id.startsWith('A-')).concat(j.items);
         if (document.getElementById('vendorSearch')) updateVendorList();
         console.log(`成功載入 ${j.items.length} 筆 特約門市（同源快取 ${j.updated}）`);
+      }).catch(() => {});
+
+      // A單位清冊：每週自動解析官方PDF（data/a_units.json），覆蓋內嵌備援版
+      fetch('data/a_units.json').then(r => r.ok ? r.json() : null).then(j => {
+        if (j && j.items && j.items.length >= 60) {
+          aUnitData = j.items;
+          if (document.getElementById('aUnitGrid')) updateAUnitList();
+          console.log(`成功載入 ${j.items.length} 家 A單位（同源自動解析 ${j.updated}）`);
+        }
       }).catch(() => {});
 
       // 每週自動同步的機構名單（GitHub Actions 產出，取代內嵌舊資料）

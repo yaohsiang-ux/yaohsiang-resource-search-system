@@ -375,19 +375,173 @@ def extract_law_date(html):
     return "PARSE_FAIL"
 
 
-def aunit_signal():
-    """衛生局專區頁 → A單位清冊 PDF 內容 hash（連結網址會換，故 hash 檔案內容）"""
+def aunit_pdf_url():
+    """衛生局專區頁 → A單位清冊 PDF 下載網址（連結會換版）"""
     page = fetch(HEALTH_LIST_PAGE)
-    url = None
     for m in re.finditer(r'href="(https://www-ws\.gov\.taipei/Download\.ashx[^"]+)"', page):
         seg = page[m.start():m.start() + 500]
         if "A單位" in seg or "整合型" in seg:
-            url = m.group(1).replace("&amp;", "&")
-            break
+            return m.group(1).replace("&amp;", "&")
+    return None
+
+
+def aunit_signal():
+    """A單位清冊 PDF 內容 hash（連結網址會換，故 hash 檔案內容）"""
+    url = aunit_pdf_url()
     if not url:
         return "LINK_NOT_FOUND"
-    pdf = fetch(url, binary=True)
-    return hashlib.sha256(pdf).hexdigest()
+    return hashlib.sha256(fetch(url, binary=True)).hexdigest()
+
+
+# A單位清冊 PDF 表格欄位右邊界（序號|單位名稱|行政區|服務區域里別|地址電話）
+_AU_COLS = [37, 215, 249, 420, 580]
+
+
+def _fmt_tel(raw):
+    """PDF 電話 → 統一格式：加 (02) 前綴、分機空格。"""
+    raw = raw.strip().replace("　", " ")
+    if not raw:
+        return ""
+    # 多支電話以 / 或 、 分隔，逐一處理主碼
+    raw = raw.replace("分機", " 分機").replace("轉", " 分機")
+    # 開頭是 7-8 碼市話（無區碼）→ 補 (02)
+    if re.match(r"^\d{4}-?\d{4}", raw) or re.match(r"^\d{7,8}(?!\d)", raw):
+        raw = "(02)" + raw
+    return re.sub(r"\s+", " ", raw).strip()
+
+
+def parse_aunit_pdf(path):
+    """A單位清冊 PDF → [{id,title,district,address,tel,area}]。字元級分欄，儲存格垂直置中。"""
+    import pdfplumber
+    C = _AU_COLS
+    recs = []
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            chars = [c for c in page.chars if c["text"].strip()]
+            seq_rows = {}
+            for c in chars:
+                if c["x1"] <= C[0] + 3 and c["text"].isdigit():
+                    seq_rows.setdefault(round(c["top"]), []).append(c)
+            seqs = []
+            for top, cs in sorted(seq_rows.items()):
+                cs.sort(key=lambda c: c["x0"])
+                seqs.append((top, int("".join(c["text"] for c in cs))))
+            if not seqs:
+                continue
+            tops = [t for t, _ in seqs]
+            # 行政區合併儲存格：長橫線界定區塊，區名字塊標記歸屬
+            seps = sorted(set(round(e["top"]) for e in page.horizontal_edges
+                              if e["x0"] < C[1] + 1 and e["x1"] > C[2] - 1))
+            dz = {}
+            for c in chars:
+                if C[1] < (c["x0"] + c["x1"]) / 2 <= C[2]:
+                    dz.setdefault(round(c["top"] / 4), []).append(c)
+            dblocks = []
+            for _, cs in sorted(dz.items()):
+                cs.sort(key=lambda c: c["x0"])
+                txt = "".join(c["text"] for c in cs)
+                if txt.endswith("區"):
+                    dblocks.append((min(c["top"] for c in cs), txt))
+
+            def district_of(st):
+                for ctop, name in dblocks:
+                    lo = max([s for s in seps if s <= ctop], default=-1e9)
+                    hi = min([s for s in seps if s > ctop], default=1e9)
+                    if lo <= st < hi:
+                        return name
+                return ""
+
+            mids = [(tops[i] + tops[i + 1]) / 2 for i in range(len(tops) - 1)]
+            # 首列下界 = 首序號上方最近的表格橫線（表頭下緣），避表頭又不切里別首行
+            lo0 = max([s for s in seps if s < tops[0]], default=tops[0] - 12)
+            los, his = [lo0] + mids, mids + [1e9]
+            for i, (top, seq) in enumerate(seqs):
+                lo, hi = los[i], his[i]
+
+                def col(l, r):
+                    cs = [c for c in chars if lo <= c["top"] < hi and l < (c["x0"] + c["x1"]) / 2 <= r]
+                    cs.sort(key=lambda c: (round(c["top"] / 4), c["x0"]))
+                    return "".join(c["text"] for c in cs)
+
+                name = col(C[0], C[1])
+                area = col(C[2], C[3])
+                atc = [c for c in chars if lo <= c["top"] < hi and C[3] < (c["x0"] + c["x1"]) / 2 <= C[4]]
+                rows = {}
+                for c in atc:
+                    rows.setdefault(round(c["top"] / 4), []).append(c)
+                lines = []
+                for _, cs in sorted(rows.items()):
+                    cs.sort(key=lambda c: c["x0"])
+                    lines.append("".join(c["text"] for c in cs))
+                lines = [l for l in lines if "服務地址" not in l and "更新" not in l]
+                addr = "、".join(l for l in lines if not re.match(r"^[\(0-9]", l))
+                tel = " ".join(l for l in lines if re.match(r"^[\(0-9]", l))
+                recs.append({"id": str(seq), "title": name, "district": district_of(top),
+                             "address": addr.strip(), "tel": _fmt_tel(tel), "area": area.strip()})
+    return recs
+
+
+DISTRICTS_12 = {"大安區", "松山區", "文山區", "信義區", "內湖區", "南港區",
+                "北投區", "士林區", "中山區", "大同區", "中正區", "萬華區"}
+
+
+def validate_aunits(recs):
+    """嚴格驗證關卡：回傳 (是否通過, 問題清單)。全自動只在通過時覆寫。"""
+    problems = []
+    if len(recs) < 60:
+        problems.append(f"筆數過少 {len(recs)}")
+    for r in recs:
+        tag = f"seq{r['id']}"
+        if not r["title"] or not r["area"] or not r["tel"]:
+            problems.append(f"{tag} 欄位空缺")
+        if r["district"] not in DISTRICTS_12:
+            problems.append(f"{tag} 行政區異常({r['district']!r})")
+        # 里別需含「里」且不含地址殘字（括號配對不檢查：官方原文本身即有巢狀/不配對括號）
+        if "里" not in r["area"]:
+            problems.append(f"{tag} 里別無里名")
+        if re.search(r"\d+號|一覽表|單位名稱|服務區域", r["area"]):
+            problems.append(f"{tag} 里別含表頭/地址殘字")
+        if re.search(r"一覽表|單位名稱", r["title"]):
+            problems.append(f"{tag} 名稱含表頭殘字")
+    return (len(problems) == 0, problems)
+
+
+def sync_a_units():
+    """A單位清冊 PDF → data/a_units.json（全自動；未過驗證則不覆寫，交由 watch 開 Issue）"""
+    import tempfile
+    url = aunit_pdf_url()
+    if not url:
+        print("::warning::找不到 A單位清冊連結，跳過", file=sys.stderr)
+        return
+    pdf_bytes = fetch(url, binary=True)
+    with tempfile.NamedTemporaryFile(suffix=".pdf", delete=False) as f:
+        f.write(pdf_bytes)
+        tmp = f.name
+    try:
+        recs = parse_aunit_pdf(tmp)
+    except Exception as e:
+        print(f"::warning::A單位 PDF 解析失敗（{e}），不覆寫", file=sys.stderr)
+        return
+    ok, problems = validate_aunits(recs)
+    if not ok:
+        print(f"::warning::A單位解析未過驗證（{len(problems)} 項），不覆寫；問題：{problems[:5]}", file=sys.stderr)
+        return
+    out = {"updated": datetime.now(TPE).strftime("%Y-%m-%d") + "（衛生局清冊自動解析）",
+           "source": HEALTH_LIST_PAGE, "count": len(recs), "items": recs}
+    path = DATA / "a_units.json"
+    new = json.dumps(out, ensure_ascii=False, indent=1)
+
+    def core(s):
+        try:
+            return json.dumps(json.loads(s).get("items"), ensure_ascii=False)
+        except Exception:
+            return ""
+    old = path.read_text(encoding="utf-8") if path.exists() else ""
+    if core(new) != core(old):
+        path.write_text(new, encoding="utf-8")
+        print(f"a_units.json 已更新：{len(recs)} 家")
+    else:
+        print(f"a_units.json 無變動（{len(recs)} 家）")
 
 
 def ei_pdf_signal(page_url):
@@ -443,6 +597,7 @@ if __name__ == "__main__":
         sync_sheltered_workshops()
         sync_xiaozuosuo()
         sync_vendors()
+        sync_a_units()
     elif cmd == "watch":
         watch()
     else:
