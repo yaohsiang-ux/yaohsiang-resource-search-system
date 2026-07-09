@@ -289,6 +289,71 @@ def sync_nursing_homes():
     _save_facility_json("nursing_homes.json", "護理之家", items, 12)
 
 
+LTC_MAP_LTC = "https://ltcpap.mohw.gov.tw/public/csv/ltc.csv"    # 機構層級
+LTC_MAP_ALL = "https://ltcpap.mohw.gov.tw/public/csv/all.csv"    # 特約服務項目層級
+TPE_CITY = "63000"  # 臺北市縣市代碼
+# 臺北市行政區代碼對照（衛福部長照地圖鄉鎮市區欄）
+TPE_DIST = {"63000010": "松山區", "63000020": "信義區", "63000030": "大安區",
+            "63000040": "中山區", "63000050": "中正區", "63000060": "大同區",
+            "63000070": "萬華區", "63000080": "文山區", "63000090": "南港區",
+            "63000100": "內湖區", "63000110": "士林區", "63000120": "北投區"}
+
+
+def _read_csv(url):
+    text = fetch(url).lstrip("﻿")
+    return list(csv.DictReader(io.StringIO(text)))
+
+
+def sync_residential():
+    """臺北市機構住宿式長照機構（衛福部長照地圖 ltc.csv 種類3，每日更新）→ data/residential.json"""
+    rows = _read_csv(LTC_MAP_LTC)
+    items = []
+    for r in rows:
+        if r.get("縣市") == TPE_CITY and r.get("機構種類") == "3":
+            raw = (r.get("地址全址") or "").strip()
+            dist = TPE_DIST.get((r.get("鄉鎮市區") or "").strip(), _district(raw))
+            addr = raw if raw.startswith("臺北市") else f"臺北市{dist}{raw}"
+            items.append({
+                "name": (r.get("機構名稱") or "").strip(),
+                "category": "長照", "subCategory": "住宿式長照機構",
+                "district": dist, "address": addr,
+                "phone": _phone02((r.get("機構電話") or "").strip()),
+                "capacity": "住宿式", "note": "",
+            })
+    _save_facility_json("residential.json", "住宿式長照機構", items, 8)
+
+
+def sync_daycare():
+    """臺北市長者日間照顧（衛福部長照地圖 all.csv 日照特約，排除身障日照，每日更新）→ data/daycare.json"""
+    rows = _read_csv(LTC_MAP_ALL)
+    seen = {}
+    for r in rows:
+        code = (r.get("機構代碼") or "")
+        if not code or not code[0].isdigit():
+            continue
+        if r.get("縣市") != TPE_CITY:
+            continue
+        if "日間照顧" not in (r.get("特約服務項目") or ""):
+            continue
+        name = (r.get("機構名稱") or "").strip()
+        if "身障" in name or "身心障礙" in name or "小規模" in name:  # 身障日照/小規機另類
+            continue
+        seen[code] = r
+    items = []
+    for r in seen.values():
+        raw = (r.get("地址全址") or "").strip()
+        dist = _district(raw) or TPE_DIST.get((r.get("區") or "").strip()) or TPE_DIST.get((r.get("鄉鎮市區") or "").strip()) or ""
+        addr = raw if raw.startswith("臺北市") else f"臺北市{dist}{raw}"
+        items.append({
+            "name": (r.get("機構名稱") or "").strip(),
+            "category": "長照", "subCategory": "長者日間照顧",
+            "district": dist, "address": addr,
+            "phone": _phone02((r.get("機構電話") or "").strip()),
+            "capacity": "日照", "note": "",
+        })
+    _save_facility_json("daycare.json", "長者日間照顧", items, 50)
+
+
 def sync_sheltered_workshops():
     """臺北市庇護工場名冊（data.taipei 開放資料 API，勞動局年度更新）→ data/workshops.json"""
     d = json.loads(fetch(WORKSHOP_API))
@@ -679,6 +744,8 @@ if __name__ == "__main__":
         sync_nursing_homes()
         sync_elder_facilities()
         sync_small_multi()
+        sync_residential()
+        sync_daycare()
     elif cmd == "watch":
         watch()
     else:
