@@ -211,6 +211,84 @@ def _save_facility_json(fname, label, items, min_count):
         print(f"{fname} 無變動（{len(items)} 筆）")
 
 
+NURSING_CSV = ("https://data.taipei/api/dataset/b20c5ea7-dcae-446b-8d85-574a2bb2c907"
+               "/resource/ed438da1-9e3c-4ccd-86be-6eeb4b275259/download")
+ELDER_API = ("https://data.taipei/api/v1/dataset/"
+             "2649f023-26ce-483a-a6f9-d7854522bcfd?scope=resourceAquire&limit=200")
+SMALLMULTI_API = ("https://data.taipei/api/v1/dataset/"
+                  "2ab15ace-a058-4170-8da2-ecfe5707e926?scope=resourceAquire&limit=200")
+
+
+def _phone02(p):
+    p = (p or "").strip()
+    return ("(02)" + p) if p and not p.startswith("0") and not p.startswith("(") else p
+
+
+def sync_elder_facilities():
+    """臺北市老人福利機構名冊（data.taipei API，社會局年度更新）→ data/elder.json"""
+    d = json.loads(fetch(ELDER_API))
+    items = []
+    for r in d["result"]["results"]:
+        beds = (r.get("核定總床位數量") or "").strip()
+        prop = (r.get("屬性") or "").strip()
+        target = re.sub(r"\s+", "", r.get("收容對象") or "")
+        items.append({
+            "name": (r.get("機構名稱") or "").strip(),
+            "category": "長照", "subCategory": "老人福利機構",
+            "district": (r.get("區域別") or "").strip() or _district(r.get("地址")),
+            "address": (r.get("地址") or "").strip(),
+            "phone": _phone02(r.get("電話")),
+            "capacity": (beds + "床") if beds else "",
+            "note": "；".join(x for x in [prop, target] if x),
+        })
+    _save_facility_json("elder.json", "老人福利機構", items, 60)
+
+
+def sync_small_multi():
+    """臺北市小規模多機能（data.taipei API，社會局）→ data/small_multi.json"""
+    d = json.loads(fetch(SMALLMULTI_API))
+    items = []
+    for r in d["result"]["results"]:
+        items.append({
+            "name": (r.get("機構名稱") or "").strip(),
+            "category": "長照", "subCategory": "小規模多機能",
+            "district": _district(r.get("地址")),
+            "address": (r.get("地址") or "").strip(),
+            "phone": _phone02(r.get("電話")),
+            "capacity": "小規機",
+            "note": (r.get("評鑑結果") or "").strip(),
+        })
+    _save_facility_json("small_multi.json", "小規模多機能", items, 10)
+
+
+def sync_nursing_homes():
+    """臺北市一般護理之家（data.gov.tw 132458 → data.taipei CSV，衛生局）→ data/nursing_homes.json"""
+    text = fetch(NURSING_CSV)
+    rows = list(csv.reader(io.StringIO(text)))
+    if not rows:
+        print("::warning::護理之家 CSV 空，跳過", file=sys.stderr)
+        return
+    hdr = [h.strip().lstrip("﻿") for h in rows[0]]
+    idx = {name: hdr.index(name) for name in ["機構名稱", "開放床數", "地址", "電話", "分機"] if name in hdr}
+    items = []
+    for r in rows[1:]:
+        if len(r) <= idx.get("機構名稱", 99) or not r[idx["機構名稱"]].strip():
+            continue
+        addr = re.sub(r"\s+", "", r[idx["地址"]]) if "地址" in idx else ""
+        phone = r[idx["電話"]].strip() if "電話" in idx else ""
+        ext = r[idx["分機"]].strip() if "分機" in idx and len(r) > idx["分機"] else ""
+        beds = r[idx["開放床數"]].strip() if "開放床數" in idx else ""
+        items.append({
+            "name": r[idx["機構名稱"]].strip(),
+            "category": "長照", "subCategory": "護理之家",
+            "district": _district(addr), "address": addr,
+            "phone": phone + ("#" + ext if ext else ""),
+            "capacity": (beds + "床") if beds else "",
+            "note": "",
+        })
+    _save_facility_json("nursing_homes.json", "護理之家", items, 12)
+
+
 def sync_sheltered_workshops():
     """臺北市庇護工場名冊（data.taipei 開放資料 API，勞動局年度更新）→ data/workshops.json"""
     d = json.loads(fetch(WORKSHOP_API))
@@ -598,6 +676,9 @@ if __name__ == "__main__":
         sync_xiaozuosuo()
         sync_vendors()
         sync_a_units()
+        sync_nursing_homes()
+        sync_elder_facilities()
+        sync_small_multi()
     elif cmd == "watch":
         watch()
     else:

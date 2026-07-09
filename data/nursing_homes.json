@@ -1,0 +1,186 @@
+{
+ "updated": "2026-07-09",
+ "count": 18,
+ "items": [
+  {
+   "name": "頤園護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "士林區",
+   "address": "臺北市士林區重慶北路4段138-142號1-4樓",
+   "phone": "(02)28119666",
+   "capacity": "69床",
+   "note": ""
+  },
+  {
+   "name": "陽明常春護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "士林區",
+   "address": "臺北市士林區格致路7號2樓",
+   "phone": "(02)28629997",
+   "capacity": "80床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立聯合醫院附設陽明護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "士林區",
+   "address": "臺北市士林區雨聲街105號",
+   "phone": "(02)28353456#6862、6863",
+   "capacity": "49床",
+   "note": ""
+  },
+  {
+   "name": "百齡診所附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "士林區",
+   "address": "臺北市士林區重慶北路4段187號",
+   "phone": "(02)28113113",
+   "capacity": "90床",
+   "note": ""
+  },
+  {
+   "name": "吉翔護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "大同區",
+   "address": "臺北市大同區甘州街55號4、7、8樓",
+   "phone": "(02)25520557",
+   "capacity": "49床",
+   "note": ""
+  },
+  {
+   "name": "大稻埕護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "大同區",
+   "address": "臺北市大同區環河北路1段73、75、77及79號1、2樓",
+   "phone": "(02)25505197",
+   "capacity": "24床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立聯合醫院附設仁愛護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "大安區",
+   "address": "臺北市大安區仁愛路4段10號",
+   "phone": "(02)27093600#1522",
+   "capacity": "49床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立聯合醫院附設和平婦幼護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "中正區",
+   "address": "臺北市中正區中華路2段33號B棟9樓",
+   "phone": "(02)23889595#8901-8903",
+   "capacity": "41床",
+   "note": ""
+  },
+  {
+   "name": "三軍總醫院附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "中正區",
+   "address": "臺北市中正區汀州路3段40號4～9樓",
+   "phone": "(02)23659055#11339",
+   "capacity": "217床",
+   "note": ""
+  },
+  {
+   "name": "康寧醫療財團法人附設康寧護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "內湖區",
+   "address": "臺北市內湖區成功路5段420巷26號6、7樓",
+   "phone": "(02)26345500#7000、7001",
+   "capacity": "96床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立萬芳醫院-委託財團法人臺北醫學大學辦理附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "文山區",
+   "address": "臺北市文山區興隆路3段111號12樓",
+   "phone": "(02)29307930#52901",
+   "capacity": "39床",
+   "note": ""
+  },
+  {
+   "name": "重建樂活護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "文山區",
+   "address": "臺北市文山區萬美街1段19巷3號1樓",
+   "phone": "(02)22305663",
+   "capacity": "22床",
+   "note": ""
+  },
+  {
+   "name": "景美醫院附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "文山區",
+   "address": "臺北市文山區萬慶街18號3-4樓",
+   "phone": "(02)29332962",
+   "capacity": "46床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立關渡醫院-委託臺北榮民總醫院經營附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "北投區",
+   "address": "臺北市北投區知行路225巷12號6樓",
+   "phone": "(02)28587000#7161",
+   "capacity": "92床",
+   "note": ""
+  },
+  {
+   "name": "三軍總醫院松山分院附設民眾診療服務處附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "松山區",
+   "address": "臺北市松山區健康路131號健康長青樓3、4樓",
+   "phone": "(02)27642151#671976、總機9",
+   "capacity": "56床",
+   "note": ""
+  },
+  {
+   "name": "鵬程護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "松山區",
+   "address": "臺北市松山區健康路399號及399號2樓",
+   "phone": "(02)87872011",
+   "capacity": "47床",
+   "note": ""
+  },
+  {
+   "name": "臺北市立聯合醫院附設忠孝護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "南港區",
+   "address": "臺北市南港區同德路87號6樓",
+   "phone": "(02)27861288#8764",
+   "capacity": "49床",
+   "note": ""
+  },
+  {
+   "name": "國立臺灣大學醫學院附設醫院北護分院附設護理之家",
+   "category": "長照",
+   "subCategory": "護理之家",
+   "district": "萬華區",
+   "address": "臺北市萬華區內江街87號7、8、9樓",
+   "phone": "(02)23717101#2188000",
+   "capacity": "59床",
+   "note": ""
+  }
+ ]
+}

@@ -2939,7 +2939,7 @@
       }).catch(() => {});
 
       // 每週自動同步的機構名單（GitHub Actions 產出，取代內嵌舊資料）
-      [['data/workshops.json', '庇護工場', 30], ['data/xiaozuosuo.json', '小作所', 15]].forEach(([url, subcat, minN]) => {
+      [['data/workshops.json', '庇護工場', 30], ['data/xiaozuosuo.json', '小作所', 15], ['data/nursing_homes.json', '護理之家', 12], ['data/elder.json', '老人福利機構', 60], ['data/small_multi.json', '小規模多機能', 10]].forEach(([url, subcat, minN]) => {
         fetch(url).then(r => r.ok ? r.json() : null).then(j => {
           if (!j || !j.items || j.items.length < minN) return;
           generalResourcesData = generalResourcesData.filter(x => x.subCategory !== subcat).concat(j.items);
