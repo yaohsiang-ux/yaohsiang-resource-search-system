@@ -299,8 +299,9 @@ TPE_DIST = {"63000010": "松山區", "63000020": "信義區", "63000030": "大�
             "63000100": "內湖區", "63000110": "士林區", "63000120": "北投區"}
 
 
-def _read_csv(url):
-    text = fetch(url).lstrip("﻿")
+def _read_csv(url, timeout=180):
+    # 衛福部長照地圖 all.csv 較大（3萬列），且境外 runner 連線較慢，給長 timeout
+    text = fetch(url, timeout=timeout).lstrip("﻿")
     return list(csv.DictReader(io.StringIO(text)))
 
 
@@ -735,17 +736,21 @@ def watch():
 if __name__ == "__main__":
     cmd = sys.argv[1] if len(sys.argv) > 1 else ""
     if cmd == "sync":
-        sync_c_stations()
-        sync_ei_products()
-        sync_sheltered_workshops()
-        sync_xiaozuosuo()
-        sync_vendors()
-        sync_a_units()
-        sync_nursing_homes()
-        sync_elder_facilities()
-        sync_small_multi()
-        sync_residential()
-        sync_daycare()
+        # 每個 syncer 獨立容錯：單一來源掛掉不影響其他，不讓整個 job 失敗
+        syncers = [sync_c_stations, sync_ei_products, sync_sheltered_workshops,
+                   sync_xiaozuosuo, sync_vendors, sync_a_units, sync_nursing_homes,
+                   sync_elder_facilities, sync_small_multi, sync_residential, sync_daycare]
+        failed = []
+        for fn in syncers:
+            try:
+                fn()
+            except Exception as e:
+                print(f"::warning::{fn.__name__} 失敗（保留舊資料）: {e}", file=sys.stderr)
+                failed.append(fn.__name__)
+        if failed:
+            print(f"部分來源同步失敗（其餘正常）: {', '.join(failed)}")
+        if len(failed) == len(syncers):  # 全掛才視為 job 失敗
+            sys.exit(1)
     elif cmd == "watch":
         watch()
     else:
