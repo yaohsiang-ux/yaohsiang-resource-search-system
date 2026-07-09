@@ -305,53 +305,152 @@ def _read_csv(url, timeout=180):
     return list(csv.DictReader(io.StringIO(text)))
 
 
-def sync_residential():
-    """臺北市機構住宿式長照機構（衛福部長照地圖 ltc.csv 種類3，每日更新）→ data/residential.json"""
-    rows = _read_csv(LTC_MAP_LTC)
+# 住宿式/日照：主源用臺北市政府 PDF（GitHub runner 連得上 www-ws），
+# 備援用衛福部長照地圖 CSV（資料最全每日更新，但境外 runner 連不上→僅本機/台灣IP有效）
+RESIDENTIAL_PAGE = "https://health.gov.taipei/News.aspx?n=E139461B864ECC75&sms=5F83E3615F00C15F"
+DAYCARE_PAGE = "https://dosw.gov.taipei/cp.aspx?n=3E3C1D86A51BF473&s=B72AFFE457F98DE1"
+
+
+def _taipei_pdf_url(page_url, keyword):
+    """從臺北市政府頁面抓含 keyword 的最新 PDF 下載連結（連結會換版）"""
+    import base64
+    import urllib.parse as up
+    page = fetch(page_url)
+    for m in re.finditer(r'href="(https://www-ws\.gov\.taipei/Download\.ashx[^"]+)"', page):
+        u = m.group(1).replace("&amp;", "&")
+        q = up.parse_qs(up.urlparse(u).query)
+        try:
+            n = base64.b64decode(up.unquote(q["n"][0])).decode("utf-8")
+        except Exception:
+            n = ""
+        if keyword in n and n.lower().endswith(".pdf"):
+            return u
+    return None
+
+
+def _fetch_pdf_tmp(url):
+    import tempfile
+    data = fetch(url, binary=True, timeout=120)
+    f = tempfile.NamedTemporaryFile(suffix=".pdf", delete=False)
+    f.write(data)
+    f.close()
+    return f.name
+
+
+def _sq(s):
+    return re.sub(r"\s+", "", s or "")
+
+
+def _parse_residential_pdf(path):
+    """臺北市衛生局住宿式長照機構一覽表 PDF（標準表格）→ items。地址=倒2欄、電話=末欄。"""
+    import pdfplumber
     items = []
-    for r in rows:
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            for tbl in page.extract_tables():
+                for row in tbl:
+                    c = [x or "" for x in row]
+                    if len(c) < 6 or not c[0].strip().isdigit():
+                        continue
+                    beds = _sq(c[4])
+                    items.append({
+                        "name": _sq(c[3]), "category": "長照", "subCategory": "住宿式長照機構",
+                        "district": _district(_sq(c[-2])), "address": _sq(c[-2]),
+                        "phone": _sq(c[-1]),
+                        "capacity": (beds + "床") if beds.isdigit() else (beds or "住宿式"),
+                        "note": "",
+                    })
+    return items
+
+
+def _parse_daycare_pdf(path):
+    """臺北市社會局社區式長照機構一覽表 PDF（含服務類型欄）→ 只取日照、排除小規機與新北。"""
+    import pdfplumber
+    items = []
+    with pdfplumber.open(path) as pdf:
+        for page in pdf.pages:
+            for tbl in page.extract_tables():
+                for row in tbl:
+                    c = [x or "" for x in row]
+                    if len(c) < 6 or not c[0].strip().isdigit():
+                        continue
+                    svc = _sq(c[3])
+                    addr = _sq(c[4])
+                    if svc not in ("日照", "日間照顧") or "北市" not in addr:  # 排除小規機/新北
+                        continue
+                    items.append({
+                        "name": _sq(c[1]), "category": "長照", "subCategory": "長者日間照顧",
+                        "district": _sq(c[2]) or _district(addr), "address": addr,
+                        "phone": _phone02(_sq(c[5])), "capacity": "日照", "note": "",
+                    })
+    return items
+
+
+def _mohw_residential():
+    """備援：衛福部長照地圖 ltc.csv 種類3（臺北市住宿式，本機/台灣IP有效）"""
+    items = []
+    for r in _read_csv(LTC_MAP_LTC):
         if r.get("縣市") == TPE_CITY and r.get("機構種類") == "3":
             raw = (r.get("地址全址") or "").strip()
             dist = TPE_DIST.get((r.get("鄉鎮市區") or "").strip(), _district(raw))
             addr = raw if raw.startswith("臺北市") else f"臺北市{dist}{raw}"
-            items.append({
-                "name": (r.get("機構名稱") or "").strip(),
-                "category": "長照", "subCategory": "住宿式長照機構",
-                "district": dist, "address": addr,
-                "phone": _phone02((r.get("機構電話") or "").strip()),
-                "capacity": "住宿式", "note": "",
-            })
-    _save_facility_json("residential.json", "住宿式長照機構", items, 8)
+            items.append({"name": (r.get("機構名稱") or "").strip(), "category": "長照",
+                          "subCategory": "住宿式長照機構", "district": dist, "address": addr,
+                          "phone": _phone02((r.get("機構電話") or "").strip()),
+                          "capacity": "住宿式", "note": ""})
+    return items
 
 
-def sync_daycare():
-    """臺北市長者日間照顧（衛福部長照地圖 all.csv 日照特約，排除身障日照，每日更新）→ data/daycare.json"""
-    rows = _read_csv(LTC_MAP_ALL)
+def _mohw_daycare():
+    """備援：衛福部長照地圖 all.csv 日照特約（排除身障/小規機，本機/台灣IP有效）"""
     seen = {}
-    for r in rows:
-        code = (r.get("機構代碼") or "")
-        if not code or not code[0].isdigit():
-            continue
-        if r.get("縣市") != TPE_CITY:
+    for r in _read_csv(LTC_MAP_ALL):
+        code = r.get("機構代碼") or ""
+        if not code or not code[0].isdigit() or r.get("縣市") != TPE_CITY:
             continue
         if "日間照顧" not in (r.get("特約服務項目") or ""):
             continue
         name = (r.get("機構名稱") or "").strip()
-        if "身障" in name or "身心障礙" in name or "小規模" in name:  # 身障日照/小規機另類
+        if "身障" in name or "身心障礙" in name or "小規模" in name:
             continue
         seen[code] = r
     items = []
     for r in seen.values():
         raw = (r.get("地址全址") or "").strip()
-        dist = _district(raw) or TPE_DIST.get((r.get("區") or "").strip()) or TPE_DIST.get((r.get("鄉鎮市區") or "").strip()) or ""
+        dist = _district(raw) or TPE_DIST.get((r.get("區") or "").strip()) or ""
         addr = raw if raw.startswith("臺北市") else f"臺北市{dist}{raw}"
-        items.append({
-            "name": (r.get("機構名稱") or "").strip(),
-            "category": "長照", "subCategory": "長者日間照顧",
-            "district": dist, "address": addr,
-            "phone": _phone02((r.get("機構電話") or "").strip()),
-            "capacity": "日照", "note": "",
-        })
+        items.append({"name": (r.get("機構名稱") or "").strip(), "category": "長照",
+                      "subCategory": "長者日間照顧", "district": dist, "address": addr,
+                      "phone": _phone02((r.get("機構電話") or "").strip()),
+                      "capacity": "日照", "note": ""})
+    return items
+
+
+def sync_residential():
+    """臺北市住宿式長照機構：臺北市衛生局 PDF 優先（runner 友善），衛福部 CSV 備援 → data/residential.json"""
+    items = None
+    try:
+        url = _taipei_pdf_url(RESIDENTIAL_PAGE, "住宿")
+        if url:
+            items = _parse_residential_pdf(_fetch_pdf_tmp(url))
+    except Exception as e:
+        print(f"::warning::臺北市住宿式 PDF 解析失敗（{e}），改試衛福部 CSV", file=sys.stderr)
+    if not items or len(items) < 8:
+        items = _mohw_residential()
+    _save_facility_json("residential.json", "住宿式長照機構", items, 8)
+
+
+def sync_daycare():
+    """臺北市長者日間照顧：臺北市社會局 PDF 優先（runner 友善），衛福部 CSV 備援 → data/daycare.json"""
+    items = None
+    try:
+        url = _taipei_pdf_url(DAYCARE_PAGE, "社區式")
+        if url:
+            items = _parse_daycare_pdf(_fetch_pdf_tmp(url))
+    except Exception as e:
+        print(f"::warning::臺北市日照 PDF 解析失敗（{e}），改試衛福部 CSV", file=sys.stderr)
+    if not items or len(items) < 50:
+        items = _mohw_daycare()
     _save_facility_json("daycare.json", "長者日間照顧", items, 50)
 
 
