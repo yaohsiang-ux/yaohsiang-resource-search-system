@@ -5,6 +5,12 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>臺北市A單位搜尋系統｜燿翔</title>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#D65A31" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="A單位搜尋" />
   <style>
     /* ==================== 1. 全域與基礎樣式 ==================== */
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap');
@@ -3317,6 +3323,14 @@
       container.innerHTML = `
         <section class="panel filter-panel">
           <div class="filter-top-section">
+            <div class="search-group" style="flex-basis:100%; background:#FFF7F2; border:1px solid #F0D5C8; border-radius:10px; padding:12px 14px; margin-bottom:10px;">
+              <label class="filter-label" style="color:#D65A31;">🏠 輸入地址，自動判斷責任 A 單位</label>
+              <div style="display:flex; gap:8px;">
+                <input type="text" id="addrInput" class="input-search" placeholder="例如：仁愛路四段300巷、康寧路三段75巷137號" style="flex:1;">
+                <button class="mode-btn active" style="white-space:nowrap;" onclick="lookupAddress()">查詢</button>
+              </div>
+              <div id="addrResult" style="margin-top:8px;"></div>
+            </div>
             <div class="search-group"><label class="filter-label">搜尋 A 單位</label><input type="text" id="aUnitSearch" class="input-search" placeholder="輸入名稱、地址、電話或里別（如：社子里）..."></div>
           </div>
           <div class="district-header"><h3 class="district-title">行政區篩選</h3><span class="result-count" id="aUnitCount">共 0 筆</span></div>
@@ -3370,6 +3384,8 @@
       searchInput.addEventListener('input', updateAUnitList);
       districtChips.forEach(c => c.addEventListener('click', () => { districtChips.forEach(x => x.classList.remove('active')); c.classList.add('active'); updateAUnitList(); }));
       updateAUnitList();
+      const ai = document.getElementById('addrInput');
+      if (ai) ai.addEventListener('keydown', e => { if (e.key === 'Enter') lookupAddress(); });
     }
 
     // 輪椅計算機
@@ -4361,6 +4377,100 @@
       filtered.forEach(r => { const phones = (r.phones || [r.phone]).join('; '); const groups = (r.groups || []).join('; '); const items = (r.items || []).join('; '); rows.push([`"${r.district}"`, `"${r.name}"`, `"${r.address}"`, `"${phones}"`, `"${groups}"`, `"${items}"`]); });
       let csvContent = "data:text/csv;charset=utf-8,\uFEFF" + rows.map(e => e.join(",")).join("\n");
       const encodedUri = encodeURI(csvContent); const link = document.createElement("a"); link.setAttribute("href", encodedUri); link.setAttribute("download", "臺北市特約廠商篩選清單.csv"); document.body.appendChild(link); link.click(); document.body.removeChild(link);
+    }
+
+  
+    // ==================== 地址 → 里 → A單位 自動判斷 ====================
+    let addrIndex = null;
+    async function loadAddrIndex() {
+      if (addrIndex) return addrIndex;
+      const r = await fetch('data/address_index.json');
+      if (!r.ok) throw new Error('索引載入失敗');
+      addrIndex = await r.json();
+      return addrIndex;
+    }
+    const FW2HW = s => s.replace(/[０-９]/g, c => String.fromCharCode(c.charCodeAt(0) - 0xFEE0));
+    const DIST12 = ['松山區','信義區','大安區','中山區','中正區','大同區','萬華區','文山區','南港區','內湖區','士林區','北投區'];
+
+    function liServedBy(unit, li) {
+      // 檢查 A單位責任區是否「正面」涵蓋該里（排除清單內=不涵蓋）
+      const area = unit.area || '';
+      let idx = area.indexOf(li);
+      while (idx !== -1) {
+        const open = area.lastIndexOf('(', idx);
+        const close = area.indexOf(')', idx);
+        if (open === -1) return true;                       // 里名在括號外，視為涵蓋
+        const group = area.slice(open + 1, close === -1 ? area.length : close);
+        if (!group.startsWith('排除')) return true;          // 正面清單
+        idx = area.indexOf(li, idx + 1);                     // 排除清單，看下一個出現位置
+      }
+      return false;
+    }
+
+    async function lookupAddress() {
+      const box = document.getElementById('addrResult');
+      const raw = (document.getElementById('addrInput').value || '').trim();
+      if (!raw) { box.innerHTML = ''; return; }
+      box.innerHTML = '<span style="color:#999;">查詢中...</span>';
+      let ix;
+      try { ix = await loadAddrIndex(); }
+      catch (e) { box.innerHTML = '<span style="color:#c00;">門牌索引載入失敗，請稍後再試</span>'; return; }
+
+      // 正規化：全形數字→半形、台→臺、去空白與市區前綴
+      let s = FW2HW(raw).replace(/\s+/g, '').replace(/^台/, '臺').replace(/^臺北市/, '');
+      let userDist = '';
+      for (const d of DIST12) { if (s.startsWith(d)) { userDist = d; s = s.slice(d.length); break; } }
+
+      // 找街路段：取 seg 鍵中能當開頭的最長者
+      let street = '';
+      for (const st of Object.keys(ix.seg)) {
+        if (s.startsWith(st) && st.length > street.length) street = st;
+      }
+      if (!street) { box.innerHTML = '<span style="color:#c00;">找不到此路名，請確認格式（例：仁愛路四段300巷）</span>'; return; }
+      const rest = s.slice(street.length);
+      const lane = (rest.match(/(\d+)巷/) || [])[1] || '';
+      const alley = (rest.match(/(\d+)弄/) || [])[1] || '';
+      const no = parseInt((rest.match(/(\d+)(?:之\d+)?號/) || [])[1] || '0', 10);
+
+      // 巷弄級 → 退階路段級
+      let rows = ix.lane[`${street}|${lane}|${alley}`] || (alley ? ix.lane[`${street}|${lane}|`] : null);
+      let segLevel = false;
+      if (!rows) { rows = (ix.seg[street] || []).map(x => [x[0], x[1]]); segLevel = true; }
+      let cands = rows.map(r => ({ li: r[0], dist: r[1], min: r[2], max: r[3] }));
+      if (userDist) cands = cands.filter(c => c.dist === userDist);
+      if (no && cands.some(c => c.min !== undefined)) {
+        const hit = cands.filter(c => c.min === undefined || (no >= c.min && no <= c.max));
+        if (hit.length) cands = hit;
+      }
+      if (!cands.length) { box.innerHTML = '<span style="color:#c00;">查無此地址的里別資料</span>'; return; }
+
+      const seen = new Set();
+      let out = '';
+      for (const c of cands.slice(0, 4)) {
+        if (seen.has(c.li + c.dist)) continue;
+        seen.add(c.li + c.dist);
+        const units = aUnitData.filter(u => u.district === c.dist && liServedBy(u, c.li));
+        let inner;
+        if (units.length) {
+          inner = units.map(u => `<div style="padding:6px 0; border-bottom:1px dashed #eee;"><strong>${u.title}</strong><br><span style="font-size:0.85rem; color:#666;">📍${u.address}　☎ ${u.tel}</span></div>`).join('');
+        } else {
+          // 未被正面點名（屬「全次分區/排除型」涵蓋）→ 列出該行政區全部 A 單位供聯繫
+          const distUnits = aUnitData.filter(u => u.district === c.dist);
+          inner = `<div style="font-size:0.85rem; color:#888; margin-bottom:4px;">此里屬「整個次分區」型涵蓋範圍，無法自動鎖定單一機構；以下為 ${c.dist} 全部 A 單位（可撥 1966 確認）：</div>` +
+            distUnits.map(u => `<div style="padding:4px 0; border-bottom:1px dashed #eee; font-size:0.85rem;"><strong>${u.title}</strong>　<span style="color:#666;">☎ ${u.tel}</span></div>`).join('');
+        }
+        out += `<div style="background:#fff; border:1px solid #eee; border-radius:8px; padding:10px 12px; margin-top:6px;">
+          <div style="font-weight:700; color:#D65A31;">${c.dist} ${c.li}${cands.length > 1 ? '（候選）' : ''}</div>${inner}</div>`;
+      }
+      const note = segLevel && cands.length > 1 ? '<div style="font-size:0.78rem; color:#999; margin-top:4px;">此路段跨多個里，補上巷弄與號碼可更精準。</div>' : '';
+      out += note + '<div style="font-size:0.75rem; color:#bbb; margin-top:4px;">依臺北市門牌開放資料自動判定，結果僅供參考，實際分派以照管中心為準。</div>';
+      box.innerHTML = out;
+    }
+    window.lookupAddress = lookupAddress;
+
+    // ==================== PWA Service Worker ====================
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
     }
 
   </script>

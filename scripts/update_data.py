@@ -454,6 +454,66 @@ def sync_daycare():
     _save_facility_json("daycare.json", "長者日間照顧", items, 50)
 
 
+HOUSENO_CSV = ("https://data.taipei/api/dataset/b7c8e724-1e98-45ee-a0bd-f3840623ed97"
+               "/resource/ce76ca0c-7f94-4935-ab47-1d2a41ca2abb/download")
+_FW = str.maketrans("０１２３４５６７８９", "0123456789")
+
+
+def sync_address_index():
+    """臺北市門牌位置資料（115萬筆）→ data/address_index.json（地址→里 查詢索引）
+    lane: 街路段|巷|弄 → [[里,區],...]（93% 唯一里；跨里者附號碼範圍 [里,區,min號,max號]）
+    seg:  街路段 → [[里,區],...]（巷弄查不到時的路段級候選）"""
+    text = fetch(HOUSENO_CSV, timeout=600)
+    rows = list(csv.DictReader(io.StringIO(text.lstrip("﻿"))))
+    if len(rows) < 500_000:  # 安全網
+        print(f"::error::門牌資料僅 {len(rows):,} 筆（預期 100萬+），不更新", file=sys.stderr)
+        return
+    from collections import defaultdict
+    lane_li = defaultdict(lambda: defaultdict(lambda: [10**9, -1]))  # key→里→[min號,max號]
+    lane_dist = {}
+    seg_li = defaultdict(set)
+    for r in rows:
+        st = (r.get("街路段") or "").strip()
+        li = (r.get("村里") or "").strip()
+        dist = TPE_DIST.get((r.get("鄉鎮市區代碼") or "").strip(), "")
+        if not st or not li:
+            continue
+        key = f"{st}|{(r.get('巷') or '').strip().translate(_FW)}|{(r.get('弄') or '').strip().translate(_FW)}"
+        m = re.match(r"(\d+)", (r.get("號") or "").translate(_FW))
+        no = int(m.group(1)) if m else 0
+        rng = lane_li[key][li]
+        rng[0] = min(rng[0], no)
+        rng[1] = max(rng[1], no)
+        lane_dist[(key, li)] = dist
+        seg_li[st].add((li, dist))
+    lane = {}
+    for key, lis in lane_li.items():
+        if len(lis) == 1:
+            li = next(iter(lis))
+            lane[key] = [[li, lane_dist[(key, li)]]]
+        else:  # 跨里：附號碼範圍供 號 消歧
+            lane[key] = [[li, lane_dist[(key, li)], rng[0], rng[1]] for li, rng in sorted(lis.items())]
+    seg = {st: sorted([li, d] for li, d in v) for st, v in seg_li.items()}
+    out = {"updated": datetime.now(TPE).strftime("%Y-%m-%d"),
+           "source": "臺北市門牌位置數值資料（data.taipei，每月更新）",
+           "lanes": len(lane), "lane": lane, "seg": seg}
+    path = DATA / "address_index.json"
+    new = json.dumps(out, ensure_ascii=False, separators=(",", ":"))
+    old = path.read_text(encoding="utf-8") if path.exists() else ""
+
+    def core(s):
+        try:
+            d = json.loads(s)
+            return json.dumps([d.get("lane"), d.get("seg")], ensure_ascii=False)
+        except Exception:
+            return ""
+    if core(new) != core(old):
+        path.write_text(new, encoding="utf-8")
+        print(f"address_index.json 已更新：{len(lane):,} 巷弄鍵 / {len(seg)} 路段")
+    else:
+        print(f"address_index.json 無變動（{len(lane):,} 巷弄鍵）")
+
+
 def sync_sheltered_workshops():
     """臺北市庇護工場名冊（data.taipei 開放資料 API，勞動局年度更新）→ data/workshops.json"""
     d = json.loads(fetch(WORKSHOP_API))
@@ -838,7 +898,8 @@ if __name__ == "__main__":
         # 每個 syncer 獨立容錯：單一來源掛掉不影響其他，不讓整個 job 失敗
         syncers = [sync_c_stations, sync_ei_products, sync_sheltered_workshops,
                    sync_xiaozuosuo, sync_vendors, sync_a_units, sync_nursing_homes,
-                   sync_elder_facilities, sync_small_multi, sync_residential, sync_daycare]
+                   sync_elder_facilities, sync_small_multi, sync_residential, sync_daycare,
+                   sync_address_index]
         failed = []
         for fn in syncers:
             try:

@@ -1,0 +1,16 @@
+{
+  "name": "臺北市A單位搜尋系統｜燿翔",
+  "short_name": "A單位搜尋",
+  "description": "臺北市長照與身障資源整合搜尋：A單位、輔具補助、機構總覽（離線可用）",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#D65A31",
+  "background_color": "#FAF6F0",
+  "lang": "zh-TW",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
