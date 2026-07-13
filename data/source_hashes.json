@@ -1,43 +1,43 @@
 {
  "aunit_pdf": {
   "hash": "21d90f03c62bc4f0e9ddd798032942a332a02430722ed1b9b62309d1af152c86",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "dosw_subsidy": {
   "hash": "fe97c87b1d3bf0337c813eb67b28151810202815516a21cc4034eab5d6a0c424",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "dosw_vendors": {
   "hash": "9abb68b91d4ab3c8cef1123e986808ffb00e04f328bc710ca7a7806623184d1b",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "dementia_roster": {
   "hash": "1e89a9f8142a4fdd148a5a9ffd082ec3682409bca6d6df9e85a62a1f920518f7",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "ltc_law": {
   "hash": "53ac45fbda9e8a0b48900a877c624681296330d53992379e1a771aa6f04883a1",
-  "checked": "2026-07-12",
+  "checked": "2026-07-13",
   "detail": "修正日期 民國114年06月19日"
  },
  "ei_products": {
   "hash": "851273467431c66b4388b5c3d0ed22232bb607449fa6bc3d3e94ead6af2eb406",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "daycare_roster": {
   "hash": "0415185f4c91012cfef05cc4e435523d9ecfea070769d84646dea8da0eab1c15",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "elder_roster": {
   "hash": "805fad07b8609a05d1bfe7fec3270be9d8edc555f7b962555754de9fafefab95",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "residential_roster": {
   "hash": "463fca5d304d748c15a6c21569274434208fb85e81f0490b810d9d6c1e71c82a",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  },
  "nursing_roster": {
   "hash": "4e82e5f917402953a3e33b77be6300d40025855ff8abeaf2a1e8faa4e35b4b56",
-  "checked": "2026-07-12"
+  "checked": "2026-07-13"
  }
 }
