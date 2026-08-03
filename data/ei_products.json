@@ -1,7 +1,7 @@
 {
- "updated": "2026-07-04（LTCAT 平台自動同步）",
+ "updated": "2026-08-03（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 16,
+ "count": 17,
  "items": [
   {
    "name": "FREE Walk自立行外骨骼輔助機器人",
@@ -11,6 +11,15 @@
     "EI02"
    ],
    "price": 1500000
+  },
+  {
+   "name": "HipBO-輕量型動力髖關節機器人輔具",
+   "model": "HB-PR-02",
+   "vendor": "福寶科技",
+   "codes": [
+    "EI02"
+   ],
+   "price": 98000
   },
   {
    "name": "智世代變形電動車 銀翼BSG",
@@ -114,7 +123,7 @@
    "codes": [
     "EI05"
    ],
-   "price": 3960
+   "price": 4988
   },
   {
    "name": "AI零接觸智能照護系統",
