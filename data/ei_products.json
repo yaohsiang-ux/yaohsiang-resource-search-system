@@ -1,17 +1,8 @@
 {
- "updated": "2026-08-03（LTCAT 平台自動同步）",
+ "updated": "2026-08-10（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 17,
+ "count": 16,
  "items": [
-  {
-   "name": "FREE Walk自立行外骨骼輔助機器人",
-   "model": "FW-PR-01 / FW-PR-02",
-   "vendor": "福寶科技",
-   "codes": [
-    "EI02"
-   ],
-   "price": 1500000
-  },
   {
    "name": "HipBO-輕量型動力髖關節機器人輔具",
    "model": "HB-PR-02",
