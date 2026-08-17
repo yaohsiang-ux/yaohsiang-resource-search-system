@@ -1,7 +1,7 @@
 {
- "updated": "2026-08-10（LTCAT 平台自動同步）",
+ "updated": "2026-08-17（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 16,
+ "count": 17,
  "items": [
   {
    "name": "HipBO-輕量型動力髖關節機器人輔具",
@@ -136,6 +136,14 @@
    "name": "伊鍵通-Ai+高齡智慧守護系統服務",
    "model": "OT Guard",
    "vendor": "瞬通科技",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "小安照顧助理",
+   "model": "ANT One",
+   "vendor": "歐格電子",
    "codes": [
     "EI05"
    ]
