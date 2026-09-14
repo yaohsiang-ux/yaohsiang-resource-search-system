@@ -1,5 +1,5 @@
 {
- "updated": "2026-09-07（LTCAT 平台自動同步）",
+ "updated": "2026-09-14（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
  "count": 19,
  "items": [
@@ -14,8 +14,8 @@
    "price": 152000
   },
   {
-   "name": "HipBO-輕量型動力髖關節機器人輔具",
-   "model": "HB-PR-02",
+   "name": "HipBO-智行寶下肢肢體裝具",
+   "model": "HB-PR-01",
    "vendor": "福寶科技",
    "codes": [
     "EI02"
