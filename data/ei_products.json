@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-14（LTCAT 平台自動同步）",
+ "updated": "2026-09-21（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 19,
+ "count": 23,
  "items": [
   {
    "name": "智能輔助站立步態訓練器",
@@ -127,6 +127,22 @@
    "price": 25000
   },
   {
+   "name": "50家智慧看視",
+   "model": "50homeA",
+   "vendor": "立遠生醫",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "50家智慧看視+生理量測",
+   "model": "50homeC",
+   "vendor": "立遠生醫",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
    "name": "AI智慧定位鞋墊",
    "model": "-",
    "vendor": "有創科技",
@@ -168,6 +184,15 @@
    ]
   },
   {
+   "name": "幫你顧 安全照顧組合",
+   "model": "C4U S-1000",
+   "vendor": "科技城",
+   "codes": [
+    "EI05"
+   ],
+   "price": 35400
+  },
+  {
    "name": "智慧光纖坐墊",
    "model": "USC-003B-10",
    "vendor": "滙嘉健康生活科技",
@@ -175,6 +200,15 @@
     "EI05"
    ],
    "price": 26800
+  },
+  {
+   "name": "獨居者雲端照護系統",
+   "model": "YM-TTDC-B001-00",
+   "vendor": "台灣遠距醫療器材",
+   "codes": [
+    "EI05"
+   ],
+   "price": 6000
   }
  ]
 }
