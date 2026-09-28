@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-21（LTCAT 平台自動同步）",
+ "updated": "2026-09-28（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 23,
+ "count": 24,
  "items": [
   {
    "name": "智能輔助站立步態訓練器",
@@ -125,6 +125,15 @@
     "EI05"
    ],
    "price": 25000
+  },
+  {
+   "name": "智慧感知氣墊+生理量測組-家庭版(基礎)",
+   "model": "Std-RM 100C",
+   "vendor": "輔人科技",
+   "codes": [
+    "EI04",
+    "EI05"
+   ]
   },
   {
    "name": "50家智慧看視",
