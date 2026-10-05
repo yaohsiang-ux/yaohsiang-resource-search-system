@@ -1,7 +1,7 @@
 {
- "updated": "2026-09-28（LTCAT 平台自動同步）",
+ "updated": "2026-10-05（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
- "count": 24,
+ "count": 25,
  "items": [
   {
    "name": "智能輔助站立步態訓練器",
@@ -88,7 +88,7 @@
   },
   {
    "name": "智慧光纖照護薄墊",
-   "model": "USC-003B-10",
+   "model": "HIME-001-E",
    "vendor": "滙嘉健康生活科技",
    "codes": [
     "EI04",
@@ -180,6 +180,14 @@
    "name": "伊鍵通-Ai+高齡智慧守護系統服務",
    "model": "OT Guard",
    "vendor": "瞬通科技",
+   "codes": [
+    "EI05"
+   ]
+  },
+  {
+   "name": "安心照護系統",
+   "model": "SKH-7210",
+   "vendor": "台灣新光保全",
    "codes": [
     "EI05"
    ]
