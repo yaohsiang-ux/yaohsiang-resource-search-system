@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-05（LTCAT 平台自動同步）",
+ "updated": "2026-10-12（LTCAT 平台自動同步）",
  "source": "https://ltcat.mohw.gov.tw/Public/Products",
  "count": 25,
  "items": [
@@ -11,7 +11,7 @@
     "EI01",
     "EI02"
    ],
-   "price": 152000
+   "price": 170000
   },
   {
    "name": "HipBO-智行寶下肢肢體裝具",
@@ -38,7 +38,7 @@
    "codes": [
     "EI02"
    ],
-   "price": 115000
+   "price": 128000
   },
   {
    "name": "AIoT全自動排泄處理機",
@@ -79,7 +79,7 @@
   },
   {
    "name": "iCue智慧照護幫手+生理量測組",
-   "model": "SM_N01/iCue_Hah",
+   "model": "SM_N01+iCue_Hah",
    "vendor": "維思感創",
    "codes": [
     "EI04",
